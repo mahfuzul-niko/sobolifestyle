@@ -178,7 +178,7 @@ class CartController extends Controller
 
     public function add_cart(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
     	$product_id = $request->product_id;
         $type = $request->product_type;
         $qty = $request->cart_qty_input;

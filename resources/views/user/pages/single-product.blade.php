@@ -19,8 +19,8 @@
         }
 
         /* .variant__size--value {
-                                width: 6rem !important;
-                            } */
+                                            width: 6rem !important;
+                                        } */
         .single-product-bg-info {
             margin-bottom: 5px;
         }
@@ -442,8 +442,9 @@
                                     @if (optional($stock_price)->qty > 0)
                                         <button class="ms-0 quickview__cart--btn primary__btn"
                                             onclick="addToCart({{ optional($product)->id }}, 'details', 'cart', 'single')"
-                                            id="add_to_cart_button{{ optional($product)->id }}" type="button">Add To
-                                            Cart</button>
+                                            id="add_to_cart_button{{ optional($product)->id }}" type="button">
+                                            Add To Cart
+                                        </button>
                                         <button class="quickview__cart--btn primary__btn"
                                             id="buy_now_button{{ optional($product)->id }}"
                                             onclick="addToCart({{ optional($product)->id }}, 'details', 'checkout', 'single')"
