@@ -129,38 +129,105 @@
                             class="current__price">৳{{ optional($stock_price)->price > 0 ? number_format(optional($stock_price)->price) : 0.0 }}</span>
                     @endif
                 </div>
-                <ul class="product__items--action">
-                    <li class="product__items--action__list d-flex justify-content-center align-items-center gap-2">
+                <ul class="product__items--action ">
+                    <li class="product__items--action__list  gap-2">
                         @if ($product->type == 'single')
                             @if (optional($stock_price)->qty > 0)
                                 {{-- Buy Now --}}
-                                <button class="product__items--action__btn buy__now--cart"
+                                {{-- <button class="product__items--action__btn add__to--cart w-100" 
                                     onclick="addToCart({{ $product->id }}, 'details', 'checkout', 'single')"
                                     type="button">
                                     <span class="add__to--cart__text"> Buy Now </span>
-                                </button>
+                                </button> --}}
+                                <a class="product__items--action__btn add__to--cart w-100" style=""
+                                    href="{{ route('single.product', [$product->id, Str::slug($product->title)]) }}">
+                                    <span class="add__to--cart__text">Buy Now</span>
+                                </a>
                                 {{-- Add to cart --}}
-                                <button class="product__items--action__btn add__to--cart" style=""
+                                {{-- <button class="product__items--action__btn add__to--cart" style=""
                                     onclick="addToCart({{ $product->id }}, 'only', 'cart', 'single')" type="button">
                                     <span class="add__to--cart__text"> Add to cart</span>
-                                </button>
+                                </button> --}}
                             @else
                                 {{-- Out of Stock --}}
-                                <a class="product__items--action__btn add__to--cart" href="javascript:void(0)">
+                                <a class="product__items--action__btn add__to--cart w-100" href="javascript:void(0)">
                                     <span class="add__to--cart__text">Out of Stock </span>
                                 </a>
                             @endif
                         @else
+                            <div class="product__variant">
+
+                                {{-- Colors --}}
+                                @if ($product->type == 'variation' && optional($product)->colors != '[]')
+                                    <div class="product__variant--list mb-10">
+                                        <fieldset class="variant__input--fieldset">
+                                            <legend class="product__variant--title mb-8">Color :</legend>
+
+                                            @foreach (json_decode($product->colors, true) as $color)
+                                                @php $color_info = color_info($color); @endphp
+
+                                                <input id="color_{{ $color }}" value="{{ $color }}"
+                                                    name="color" type="radio">
+
+                                                <label class="variant__color--value {{ $color_info->name }}"
+                                                    style="background-color: {{ $color_info->code }} !important;"
+                                                    for="color_{{ $color }}" title="{{ $color_info->name }}">
+                                                </label>
+                                            @endforeach
+                                        </fieldset>
+                                    </div>
+                                @endif
+
+
+                                {{-- Other Attributes --}}
+                                @if ($product->type == 'variation' && optional($product)->attributes)
+                                    @foreach (json_decode($product->attributes, true) as $attr)
+                                        @php
+                                            $info = variation_info($attr);
+                                        @endphp
+
+                                        @if ($info)
+                                            @php
+                                                $items = single_variation_info($info->id, $product->id);
+                                            @endphp
+
+                                            @if (count($items) > 0)
+                                                <div class="product__variant--list mb-15">
+                                                    <fieldset class="variant__input--fieldset {{ $info->title }}">
+                                                        <legend class="product__variant--title mb-8">
+                                                            {{ $info->title }} :</legend>
+
+                                                        @foreach ($items as $variation)
+                                                            <input id="{{ $info->title . $variation->id }}"
+                                                                value="{{ $variation->id }}" name="attribute_variation"
+                                                                type="radio">
+
+                                                            <label
+                                                                class="variant__size--value {{ $variation->variant_output }}"
+                                                                for="{{ $info->title . $variation->id }}">
+                                                                {{ $variation->variant_output }}
+                                                            </label>
+                                                        @endforeach
+
+                                                    </fieldset>
+                                                </div>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                @endif
+
+                            </div>
+
                             {{-- Variations Product --}}
                             @if (optional($stock_price)->qty > 0 || $variant_in_stock)
                                 {{-- Select Product --}}
-                                <a class="product__items--action__btn add__to--cart" style=""
+                                <a class="product__items--action__btn add__to--cart w-100" style=""
                                     href="{{ route('single.product', [$product->id, Str::slug($product->title)]) }}">
                                     <span class="add__to--cart__text">Buy Now</span>
                                 </a>
                             @else
                                 {{-- Out of Stock --}}
-                                <a class="product__items--action__btn add__to--cart" href="javascript:void(0)">
+                                <a class="product__items--action__btn add__to--cart w-100" href="javascript:void(0)">
                                     <span class="add__to--cart__text">Out of Stock </span>
                                 </a>
                             @endif
@@ -171,7 +238,7 @@
 
                 </ul>
             </div>
-            
+
         </div>
     </div>
 @endif

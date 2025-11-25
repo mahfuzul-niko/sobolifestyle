@@ -209,6 +209,7 @@
 
         //add to cart
         function addToCart(product_id, selected_variation_id2, type, page, product_type2 = null) {
+            console.log('hit');
             console.log('product_id:', product_id, 'selected_variation_id2:', selected_variation_id2, 'type:', type,
                 'page:', page, 'product_type2:', product_type2);
             url = "{{ route('cart.add') }}";
