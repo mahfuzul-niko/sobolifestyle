@@ -179,7 +179,6 @@
                                 @endif
 
 
-                                {{-- Other Attributes --}}
                                 @if ($product->type == 'variation' && optional($product)->attributes)
                                     @foreach (json_decode($product->attributes, true) as $attr)
                                         @php
@@ -189,32 +188,39 @@
                                         @if ($info)
                                             @php
                                                 $items = single_variation_info($info->id, $product->id);
+                                                $printed = []; // Track printed outputs
                                             @endphp
 
                                             @if (count($items) > 0)
                                                 <div class="product__variant--list mb-15">
                                                     <fieldset class="variant__input--fieldset {{ $info->title }}">
                                                         <legend class="product__variant--title mb-8">
-                                                            {{ $info->title }} :</legend>
+                                                            {{ $info->title }} :
+                                                        </legend>
 
                                                         @foreach ($items as $variation)
-                                                            <input id="{{ $info->title . $variation->id }}"
-                                                                value="{{ $variation->id }}" name="attribute_variation"
-                                                                type="radio">
+                                                            @if (!in_array($variation->variant_output, $printed))
+                                                                {{-- mark as printed --}}
+                                                                @php $printed[] = $variation->variant_output; @endphp
 
-                                                            <label
-                                                                class="variant__size--value {{ $variation->variant_output }}"
-                                                                for="{{ $info->title . $variation->id }}">
-                                                                {{ $variation->variant_output }}
-                                                            </label>
+                                                                <input id="{{ $info->title . $variation->id }}"
+                                                                    value="{{ $variation->id }}"
+                                                                    name="attribute_variation" type="radio">
+
+                                                                <label
+                                                                    class="variant__size--value {{ $variation->variant_output }}"
+                                                                    for="{{ $info->title . $variation->id }}">
+                                                                    {{ $variation->variant_output }}
+                                                                </label>
+                                                            @endif
                                                         @endforeach
-
                                                     </fieldset>
                                                 </div>
                                             @endif
                                         @endif
                                     @endforeach
                                 @endif
+
 
                             </div>
 
@@ -233,9 +239,6 @@
                             @endif
                         @endif
                     </li>
-
-
-
                 </ul>
             </div>
 

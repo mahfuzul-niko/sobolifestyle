@@ -208,13 +208,13 @@
                                         <label class="col-form-label"><b>Type</b></label>
                                         <div class="">
                                             <div class="form-group">
-                                                <div
+                                                {{-- <div
                                                     class="form-check form-check-inline bg-primary ml-2 px-3 p-2 rounded-pill text-light">
                                                     <input class="form-check-input" type="radio" name="type"
                                                         {{ $product->type == 'single' ? 'checked' : '' }} id="for_single"
                                                         value="single" required="">
                                                     <label class="form-check-label" for="for_single">Single</label>
-                                                </div>
+                                                </div> --}}
                                                 <div
                                                     class="form-check form-check-inline bg-success px-3 ml-2 p-2 rounded-pill text-light">
                                                     <input class="form-check-input" type="radio" name="type"
@@ -227,8 +227,7 @@
                                     </div>
                                     <div class="col-md-2"></div>
                                     <div class="col-md-10">
-                                        <div id="variation" class="my-2"
-                                            style="{{ $product->type == 'variation' ? '' : 'display: none;' }}">
+                                        <div id="variation" class="my-2" >
 
                                             <div class="shadow p-2 rounded">
                                                 <div id="variations_div" class=" p-2">

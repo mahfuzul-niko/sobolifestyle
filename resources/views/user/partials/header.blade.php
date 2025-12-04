@@ -45,7 +45,7 @@
                             Elevate your style with our exclusive collection
                         </p>
                     </div> --}}
-                    <a {{ route('index') }} class="">
+                    <a href="{{ route('index') }}" class="">
                         <h3 class="header_text_color">{{ optional($business)->title }}</h3>
                         <p class="fs-6 lh-sm header_text_color">
                             {{ optional($business)->sub_title }}

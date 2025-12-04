@@ -292,7 +292,7 @@ class ProductController extends Controller
         $product->todays_deal = isset($request->todays_deal) ? 1 : 0;
         $product->discount_type = $request->discount_type;
         $product->discount_amount = $request->discount_amount;
-        $product->type = $request->type;
+        $product->type = 'variation';
         $product->feature = $request->feature;
         $product->description = $request->description;
 
@@ -490,7 +490,7 @@ class ProductController extends Controller
             $product->todays_deal = isset($request->todays_deal) ? 1 : 0;
             $product->discount_type = $request->discount_type;
             $product->discount_amount = $request->discount_amount;
-            $product->type = $request->type;
+            $product->type = 'variation';
             $product->feature = $request->feature;
             $product->description = $request->description;
 
