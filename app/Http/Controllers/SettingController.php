@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeatureVideo;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Auth;
 use Alert;
 use Image;
 use File;
+use Storage;
 
 class SettingController extends Controller
 {
@@ -22,16 +24,63 @@ class SettingController extends Controller
         if (user()->type == 1) {
             $setting = Setting::orderBy('id', 'DESC')->first();
             return view('admin.setting.index', compact('setting'));
-        }
-        else {
-            session()->flash('error','Access Denied !');
+        } else {
+            session()->flash('error', 'Access Denied !');
             return back();
         }
+    }
+    public function featureVideo()
+    {
+        if (user()->type == 1) {
+            $feature_videos = FeatureVideo::orderBy('id', 'DESC')->get();
+            return view('admin.setting.feature-video', compact('feature_videos'));
+        } else {
+            session()->flash('error', 'Access Denied !');
+            return back();
+        }
+    }
+    public function storeFeatureVideo(Request $request)
+    {
+        $request->validate([
+            'feature_video_title' => 'required|string|max:255',
+            'feature_video_url' => 'nullable|url',
+            'feature_video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/ogg|max:51200',
+        ]);
+
+        $videoPath = null;
+
+        // If file is uploaded
+        if ($request->hasFile('feature_video')) {
+            $file = $request->file('feature_video');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $videoPath = $file->storeAs('uploads/feature_videos', $filename, 'public');
+        }
+
+        FeatureVideo::create([
+            'feature_video_title' => $request->feature_video_title,
+            'feature_video_url' => $request->feature_video_url,
+            'feature_video' => $videoPath,
+        ]);
+
+        return redirect()->back()->with('success', 'Feature video added successfully.');
+    }
+    public function destroyFeatureVideo($id)
+    {
+        $video = FeatureVideo::findOrFail($id);
+
+        // Delete file from storage if exists
+        if ($video->feature_video && Storage::disk('public')->exists($video->feature_video)) {
+            Storage::disk('public')->delete($video->feature_video);
+        }
+
+        $video->delete();
+
+        return redirect()->back()->with('success', 'Feature video deleted successfully.');
     }
 
     public function affiliate_request()
     {
-        $affiliates  = User::where('affiliate_applied', 1)->get();
+        $affiliates = User::where('affiliate_applied', 1)->get();
         return view('admin.affiliate.index', compact('affiliates'));
     }
 
@@ -52,21 +101,19 @@ class SettingController extends Controller
                 $customer->save();
                 Alert::toast('Application Rejected');
                 return back();
-            }
-            else{
+            } else {
                 return back();
             }
             dd($customer, $status);
-        }
-        else{
-            session()->flash('error','Access Denied !');
+        } else {
+            session()->flash('error', 'Access Denied !');
             return back();
         }
     }
 
     public function referral_link()
     {
-        $link = route('index').'?referral='.Auth::id();
+        $link = route('index') . '?referral=' . Auth::id();
         return view('admin.setting.referral', compact('link'));
     }
 
@@ -81,7 +128,7 @@ class SettingController extends Controller
         $setting = Setting::find(1);
         return view('admin.setting.reward-point', compact('setting'));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -147,16 +194,16 @@ class SettingController extends Controller
 
         $setting = Setting::find(1);
 
-        if(is_null($setting)) {
+        if (is_null($setting)) {
             $setting = new Setting;
         }
-        
+
         $setting->name = $request->name;
         $setting->title = $request->title;
         $setting->sub_title = $request->sub_title;
 
         $setting->logo_color = $request->logo_color;
-        
+
         $setting->primary_color = $request->primary_color;
         $setting->secondary_color = $request->secondary_color;
 
@@ -183,7 +230,7 @@ class SettingController extends Controller
         $setting->address = $request->address;
         $setting->head = $request->head;
         $setting->body = $request->body;
-        
+
         $setting->google_map_link = $request->google_map_link;
         $setting->google_map_embed = $request->google_map_embed;
 
@@ -198,41 +245,41 @@ class SettingController extends Controller
         $setting->meta_keywords = $request->meta_keywords;
         $setting->meta_tag = $request->meta_tag;
         $setting->meta_description = $request->meta_description;
-        
 
-        
+
+
         // Header logo save
-        if ($request->header_logo){
-            if (File::exists('images/website/'.$setting->header_logo)){
-                File::delete('images/website/'.$setting->header_logo);
+        if ($request->header_logo) {
+            if (File::exists('images/website/' . $setting->header_logo)) {
+                File::delete('images/website/' . $setting->header_logo);
             }
             $image = $request->file('header_logo');
-            $img = time().rand().'.' . $image->getClientOriginalExtension();
-            $location = public_path('images/website/'. $img);
+            $img = time() . rand() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/website/' . $img);
             Image::make($image)->save($location);
             $setting->header_logo = $img;
         }
 
         // Footer logo save
-        if ($request->footer_logo){
-            if (File::exists('images/website/'.$setting->footer_logo)){
-                File::delete('images/website/'.$setting->footer_logo);
+        if ($request->footer_logo) {
+            if (File::exists('images/website/' . $setting->footer_logo)) {
+                File::delete('images/website/' . $setting->footer_logo);
             }
             $image = $request->file('footer_logo');
-            $img = time().rand().'.' . $image->getClientOriginalExtension();
-            $location = public_path('images/website/'. $img);
+            $img = time() . rand() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/website/' . $img);
             Image::make($image)->save($location);
             $setting->footer_logo = $img;
         }
 
         // favicon save
-        if ($request->favicon){
-            if (File::exists('images/website/'.$setting->favicon)){
-                File::delete('images/website/'.$setting->favicon);
+        if ($request->favicon) {
+            if (File::exists('images/website/' . $setting->favicon)) {
+                File::delete('images/website/' . $setting->favicon);
             }
             $image = $request->file('favicon');
-            $img = 'favicon_'.time().rand().'.' . $image->getClientOriginalExtension();
-            $location = public_path('images/website/'. $img);
+            $img = 'favicon_' . time() . rand() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/website/' . $img);
             Image::make($image)->save($location);
             $setting->favicon = $img;
         }
@@ -250,7 +297,7 @@ class SettingController extends Controller
         ]);
 
         $setting = Setting::find($id);
-        
+
         $setting->affiliate_commision = $request->affiliate_commision;
         $setting->save();
         Alert::toast('Affiliate Configuration updated !', 'success');
@@ -265,7 +312,7 @@ class SettingController extends Controller
         ]);
 
         $setting = Setting::find($id);
-        
+
         $setting->minimum_point = $request->minimum_point;
         $setting->equivalent_point = $request->equivalent_point;
         $setting->save();

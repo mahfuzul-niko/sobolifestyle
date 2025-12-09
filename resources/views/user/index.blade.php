@@ -12,6 +12,80 @@
 @endsection
 
 @section('content')
+    <style>
+        uciq.video-slider-wrap {
+            display: block;
+            padding: 40px 0;
+        }
+
+        uciq .swiper-slide {
+            width: 280px !important;
+        }
+
+        uciq .video-card {
+            position: relative;
+            height: 420px;
+            border-radius: 22px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, .25);
+            transition: transform .25s ease;
+        }
+
+        uciq .video-card:hover {
+            transform: translateY(-6px) scale(1.01);
+        }
+
+        uciq .video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        uciq .video-title {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        uciq .video-play {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: #fff;
+            opacity: 0;
+            transition: .25s ease;
+        }
+
+        uciq .video-card:hover .video-play {
+            opacity: 1;
+        }
+
+        uciq .video-action {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+        }
+
+        uciq .video-action a {
+            width: 100%;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .18);
+            color: #fff;
+            backdrop-filter: blur(8px);
+        }
+    </style>
     @include('user.partials.slider')
 
     {{-- Category --}}
@@ -48,8 +122,7 @@
 
             </div>
             <div class="text-center mt-3">
-                <a class=" rounded shop_more_btn"
-                    href="{{ route('products') }}">See all
+                <a class=" rounded shop_more_btn" href="{{ route('products') }}">See all
                     <svg class="primary__btn--arrow__icon" xmlns="http://www.w3.org/2000/svg" width="20.2" height="12.2"
                         viewBox="0 0 6.2 6.2">
                         <path d="M7.1,4l-.546.546L8.716,6.713H4v.775H8.716L6.554,9.654,7.1,10.2,9.233,8.067,10.2,7.1Z"
@@ -59,6 +132,60 @@
             </div>
         </div>
     </section>
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <uciq class="video-slider-wrap">
+        <div class="swiper video-swiper-loop">
+            <div class="swiper-wrapper">
+
+                @for ($i = 1; $i <= 4; $i++)
+                    <div class="swiper-slide">
+                        <div class="video-card">
+                            <video src="{{ asset('assets') }}/video/test.mp4"
+                                poster="{{ asset('assets') }}/images/thumb.jpg" muted loop preload="metadata"
+                                class="video-bg">
+                            </video>
+
+                            <div class="video-title">Modern Product {{ $i }}</div>
+                            <div class="video-play">▶</div>
+
+                            <div class="video-action">
+                                <a href="#" class="btn btn-sm btn-light">View</a>
+                            </div>
+                        </div>
+                    </div>
+                @endfor
+                @for ($i = 1; $i <= 4; $i++)
+                    <div class="swiper-slide">
+                        <div class="video-card">
+                            <video src="{{ asset('assets') }}/video/test.mp4"
+                                poster="{{ asset('assets') }}/images/thumb.jpg" muted loop preload="metadata"
+                                class="video-bg">
+                            </video>
+
+                            <div class="video-title">Modern Product {{ $i }}</div>
+                            <div class="video-play">▶</div>
+
+                            <div class="video-action">
+                                <a href="#" class="btn btn-sm btn-light">View</a>
+                            </div>
+                        </div>
+                    </div>
+                @endfor
+
+            </div>
+
+            <div class="swiper-pagination"></div>
+        </div>
+    </uciq>
+
+
+
+
+
+
+
     {{-- Flash Sale Offer --}}
     <div id="flash_sale_offer"></div>
 
@@ -189,4 +316,54 @@
             flash_sale_offer();
         });
     </script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+  const swiperLoop = new Swiper('uciq .video-swiper-loop', {
+    slidesPerView: 4,
+    spaceBetween: 20,
+    loop: true,
+    loopedSlides: 4,
+    loopAdditionalSlides: 4,
+    centeredSlides: true,
+    speed: 600,
+
+    pagination: {
+      el: 'uciq .swiper-pagination',
+      clickable: true,
+      dynamicBullets: true
+    },
+
+    breakpoints: {
+      0: { slidesPerView: 1.1 },
+      576: { slidesPerView: 2.2 },
+      992: { slidesPerView: 4 }
+    }
+  });
+
+  // Hover to play video
+  document.querySelectorAll('uciq .video-card').forEach(card => {
+    const video = card.querySelector('video');
+
+    card.addEventListener('mouseenter', () => {
+      video.play();
+    });
+
+    card.addEventListener('mouseleave', () => {
+      video.pause();
+      video.currentTime = 0;
+    });
+  });
+
+});
+
+   </script>
+
+
+
+
 @endsection
