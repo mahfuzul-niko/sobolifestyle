@@ -38,6 +38,7 @@
         visibility: visible;
         transform: scale(1.05);
     }
+
 </style>
 
 @if (!empty($product))
@@ -155,74 +156,6 @@
                                 </a>
                             @endif
                         @else
-                            <div class="product__variant">
-
-                                {{-- Colors --}}
-                                @if ($product->type == 'variation' && optional($product)->colors != '[]')
-                                    <div class="product__variant--list mb-10">
-                                        <fieldset class="variant__input--fieldset">
-                                            <legend class="product__variant--title mb-8">Color :</legend>
-
-                                            @foreach (json_decode($product->colors, true) as $color)
-                                                @php $color_info = color_info($color); @endphp
-
-                                                <input id="color_{{ $color }}" value="{{ $color }}"
-                                                    name="color" type="radio">
-
-                                                <label class="variant__color--value {{ $color_info->name }}"
-                                                    style="background-color: {{ $color_info->code }} !important;"
-                                                    for="color_{{ $color }}" title="{{ $color_info->name }}">
-                                                </label>
-                                            @endforeach
-                                        </fieldset>
-                                    </div>
-                                @endif
-
-
-                                @if ($product->type == 'variation' && optional($product)->attributes)
-                                    @foreach (json_decode($product->attributes, true) as $attr)
-                                        @php
-                                            $info = variation_info($attr);
-                                        @endphp
-
-                                        @if ($info)
-                                            @php
-                                                $items = single_variation_info($info->id, $product->id);
-                                                $printed = []; // Track printed outputs
-                                            @endphp
-
-                                            @if (count($items) > 0)
-                                                <div class="product__variant--list mb-15">
-                                                    <fieldset class="variant__input--fieldset {{ $info->title }}">
-                                                        <legend class="product__variant--title mb-8">
-                                                            {{ $info->title }} :
-                                                        </legend>
-
-                                                        @foreach ($items as $variation)
-                                                            @if (!in_array($variation->variant_output, $printed))
-                                                                {{-- mark as printed --}}
-                                                                @php $printed[] = $variation->variant_output; @endphp
-
-                                                                <input id="{{ $info->title . $variation->id }}"
-                                                                    value="{{ $variation->id }}"
-                                                                    name="attribute_variation" type="radio">
-
-                                                                <label
-                                                                    class="variant__size--value {{ $variation->variant_output }}"
-                                                                    for="{{ $info->title . $variation->id }}">
-                                                                    {{ $variation->variant_output }}
-                                                                </label>
-                                                            @endif
-                                                        @endforeach
-                                                    </fieldset>
-                                                </div>
-                                            @endif
-                                        @endif
-                                    @endforeach
-                                @endif
-
-
-                            </div>
 
                             {{-- Variations Product --}}
                             @if (optional($stock_price)->qty > 0 || $variant_in_stock)
@@ -244,4 +177,7 @@
 
         </div>
     </div>
+
+
+
 @endif

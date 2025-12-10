@@ -129,7 +129,7 @@
                              <div class="col-md-12">
                                   <div class="form-group">
                                     <label>Title</label>
-                                    <input type="text" name="title" required value="{{ optional($setting)->title }}"
+                                    <input type="text" name="title"  value="{{ optional($setting)->title }}"
                                         class="form-control @error('title') is-invalid @enderror">
                                     @error('title')
                                         <span class="invalid-feedback" role="alert">
@@ -141,7 +141,7 @@
                             <div class="col-md-12">
                                   <div class="form-group">
                                     <label>Sub Title</label>
-                                    <input type="text" name="sub_title" required value="{{ optional($setting)->sub_title }}"
+                                    <input type="text" name="sub_title"  value="{{ optional($setting)->sub_title }}"
                                         class="form-control @error('sub_title') is-invalid @enderror">
                                     @error('sub_title')
                                         <span class="invalid-feedback" role="alert">

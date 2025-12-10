@@ -291,6 +291,8 @@ class ProductController extends Controller
         $product->is_tranding = isset($request->is_tranding) ? 1 : 0;
         $product->todays_deal = isset($request->todays_deal) ? 1 : 0;
         $product->discount_type = $request->discount_type;
+        $product->fit = $request->fit;
+        $product->fabrication = $request->fabrication;
         $product->discount_amount = $request->discount_amount;
         $product->type = 'variation';
         $product->feature = $request->feature;
@@ -447,7 +449,6 @@ class ProductController extends Controller
             if (!is_null($product)) {
                 $categories = Category::orderBy('id', 'DESC')->get();
                 $sub_categories = optional($product->category)->child;
-
                 $brands = Brand::orderBy('id', 'DESC')->get();
                 $colors = Colors::orderBy('name', 'ASC')->get();
                 $variations = Variation::all();
@@ -488,6 +489,8 @@ class ProductController extends Controller
             $product->is_featured = isset($request->is_featured) ? 1 : 0;
             $product->is_tranding = isset($request->is_tranding) ? 1 : 0;
             $product->todays_deal = isset($request->todays_deal) ? 1 : 0;
+            $product->fit = $request->fit;
+            $product->fabrication = $request->fabrication;
             $product->discount_type = $request->discount_type;
             $product->discount_amount = $request->discount_amount;
             $product->type = 'variation';

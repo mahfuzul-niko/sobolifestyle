@@ -64,9 +64,8 @@ class PageController extends Controller
         $sliders = Slider::where('is_active', 1)->orderBy('serial_number', 'ASC')->get();
         $sliderSideBanner = SliderSideBanner::where('is_active', 1)->orderBy('serial_number', 'ASC')->take(2)->get();
         $featured_categories = Category::where('is_featured', 1)->orderBy('position', 'ASC')->get(['id', 'title', 'image']);
-
-        $featured_products = Product::where(['is_active' => 1, 'is_featured' => 1])->orderBy('id', 'DESC')->limit(10)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors','attributes']);
-        $trending_products = Product::orderBy('id', 'DESC')->where(['is_active' => 1, 'is_tranding' => 1])->inRandomOrder()->limit(10)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors','attributes']);
+        $featured_products = Product::where(['is_active' => 1, 'is_featured' => 1])->orderBy('id', 'DESC')->limit(30)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors','attributes']);
+        $trending_products = Product::orderBy('id', 'DESC')->where(['is_active' => 1, 'is_tranding' => 1])->inRandomOrder()->limit(30)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors','attributes']);
         return view('user.index', compact('trending_products', 'featured_categories', 'sliders', 'sliderSideBanner', 'featured_products'));
 
     }
@@ -440,7 +439,6 @@ class PageController extends Controller
         if (is_null($flash_sale_offer)) {
             return Redirect()->back()->with('error', 'No Offer Found!');
         }
-
         $products = FlashSaleOfferProducts::where('flash_sale_id', $flash_sale_offer->id)->paginate(15);
         return view('user.pages.flash_sale_offer', compact('flash_sale_offer', 'products'));
 

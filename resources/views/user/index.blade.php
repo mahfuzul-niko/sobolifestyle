@@ -85,44 +85,81 @@
             color: #fff;
             backdrop-filter: blur(8px);
         }
+
+        .cat-circle-card {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #fff;
+            padding: 2px;
+            margin: auto;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            /* Important */
+        }
+
+        .cat-circle-card:hover {
+            transform: scale(1.05);
+        }
+
+        .cat-image-inside {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Keeps image nice */
+            border-radius: 50%;
+        }
+
+        .cat-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* .product_col {
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            
+        }
+
+        .product_col.fade-in {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        } */
     </style>
     @include('user.partials.slider')
 
     {{-- Category --}}
     <section class="team__section py-4 mt-10">
         <div class="container-fluid">
-            <div
-                class="row 
-            row-cols-xxl-6
-            row-cols-xl-6
-            row-cols-lg-6
-            row-cols-md-3 
-            row-cols-sm-3 
-            row-cols-3
-            justify-content-center
-             ">
-                @foreach ($featured_categories as $category)
-                    <div class="p-2">
-                        <div class="rounded shadow cat-zoom cat-py-5 cat-box">
-                            <a href="{{ route('products', ['category_id' => $category->id]) }}">
-                                <div class="row text-center">
-                                    <div class="col-12 ">
-                                        <img class="cat-image rounded-circle mb-2" style=""
-                                            src="{{ asset('images/category/' . $category->image) }}"
-                                            alt="{{ $category->title }}">
-                                    </div>
-                                    <div class="col-12 cat-title-box">
-                                        <p class="cat-title"> {{ $category->title }} </p>
-                                    </div>
+
+            <div class="swiper categorySlider">
+                <div class="swiper-wrapper">
+
+                    @foreach ($featured_categories as $category)
+                        <div class="swiper-slide text-center p-2">
+                            <a href="{{ route('products', ['category_id' => $category->id]) }}" class="text-decoration-none">
+                                <div
+                                    class="rounded-circle shadow d-flex align-items-center justify-content-center cat-circle-card">
+                                    <img class="rounded-circle cat-image-inside"
+                                        src="{{ asset('images/category/' . $category->image) }}"
+                                        alt="{{ $category->title }}">
                                 </div>
+                                <p class="cat-title mt-2 text-dark">{{ $category->title }}</p>
                             </a>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+
+                </div>
+
 
             </div>
+
             <div class="text-center mt-3">
-                <a class=" rounded shop_more_btn" href="{{ route('products') }}">See all
+                <a class="rounded shop_more_btn" href="{{ route('products') }}">
+                    See all
                     <svg class="primary__btn--arrow__icon" xmlns="http://www.w3.org/2000/svg" width="20.2" height="12.2"
                         viewBox="0 0 6.2 6.2">
                         <path d="M7.1,4l-.546.546L8.716,6.713H4v.775H8.716L6.554,9.654,7.1,10.2,9.233,8.067,10.2,7.1Z"
@@ -130,10 +167,41 @@
                     </svg>
                 </a>
             </div>
+
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new Swiper('.categorySlider', {
+                slidesPerView: 2,
+                spaceBetween: 10,
+                loop: true,
+                autoplay: {
+                    delay: 2000, // time between slides (ms)
+                    disableOnInteraction: false
+                },
 
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+                breakpoints: {
+                    576: {
+                        slidesPerView: 3
+                    },
+                    768: {
+                        slidesPerView: 4
+                    },
+                    992: {
+                        slidesPerView: 5
+                    },
+                    1200: {
+                        slidesPerView: 6
+                    },
+                }
+            });
+        });
+    </script>
+
+
+    {{-- <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
     <uciq class="video-slider-wrap">
         <div class="swiper video-swiper-loop">
@@ -178,7 +246,7 @@
 
             <div class="swiper-pagination"></div>
         </div>
-    </uciq>
+    </uciq> --}}
 
 
 
@@ -228,7 +296,7 @@
                 <div class="section__heading text-center mb-50">
                     <h2 title="Get your desired product from Featured Products" class="section__heading--maintitle">Featured
                         Products</h2>
-                    <div class="btn_custom mb-2 ">
+                    {{-- <div class="btn_custom mb-2 ">
                         <a class=" rounded shop_more_btn"
                             href="{{ route('products.individual.group', ['slug' => 'featured']) }}">Shop More
                             <svg class="primary__btn--arrow__icon" xmlns="http://www.w3.org/2000/svg" width="20.2"
@@ -238,7 +306,7 @@
                                     transform="translate(-4 -4)" fill="currentColor"></path>
                             </svg>
                         </a>
-                    </div>
+                    </div> --}}
                 </div>
                 {{-- <div class="section__heading mb-2 border-bottom d-flex d-none">
             <h2 class="section__heading--style2 flex-grow-1">Featured Products </h2>
@@ -271,27 +339,10 @@
                     <h2 title="Get your desired product from Trending Now" class="section__heading--maintitle">Trending Now
                     </h2>
                     <div class="btn_custom mb-2 ">
-                        <a class=" rounded shop_more_btn"
-                            href="{{ route('products.individual.group', ['slug' => 'traending-now']) }}">Shop More
-                            <svg class="primary__btn--arrow__icon" xmlns="http://www.w3.org/2000/svg" width="20.2"
-                                height="12.2" viewBox="0 0 6.2 6.2">
-                                <path
-                                    d="M7.1,4l-.546.546L8.716,6.713H4v.775H8.716L6.554,9.654,7.1,10.2,9.233,8.067,10.2,7.1Z"
-                                    transform="translate(-4 -4)" fill="currentColor"></path>
-                            </svg>
-                        </a>
+
                     </div>
                 </div>
-                {{-- <div class="section__heading mb-2 border-bottom d-flex d-none">
-            <h2 class="section__heading-- style2 flex-grow-1">Trending Now</h2>
-            <div class="btn_custom mb-2">
-                <a class=" rounded shop_more_btn" href="{{route('products.individual.group', ['slug'=>'traending-now'])}}">Shop More
-                    <svg class="primary__btn--arrow__icon" xmlns="http://www.w3.org/2000/svg" width="20.2" height="12.2" viewBox="0 0 6.2 6.2">
-                    <path d="M7.1,4l-.546.546L8.716,6.713H4v.775H8.716L6.554,9.654,7.1,10.2,9.233,8.067,10.2,7.1Z" transform="translate(-4 -4)" fill="currentColor"></path>
-                    </svg>
-                </a>
-            </div>
-        </div> --}}
+
                 <div class="product__section--inner">
                     <div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 mb--n30">
                         @foreach ($trending_products as $product)
@@ -320,48 +371,86 @@
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
-  const swiperLoop = new Swiper('uciq .video-swiper-loop', {
-    slidesPerView: 4,
-    spaceBetween: 20,
-    loop: true,
-    loopedSlides: 4,
-    loopAdditionalSlides: 4,
-    centeredSlides: true,
-    speed: 600,
+            const swiperLoop = new Swiper('uciq .video-swiper-loop', {
+                slidesPerView: 4,
+                spaceBetween: 20,
+                loop: true,
+                loopedSlides: 4,
+                loopAdditionalSlides: 4,
+                centeredSlides: true,
+                speed: 600,
 
-    pagination: {
-      el: 'uciq .swiper-pagination',
-      clickable: true,
-      dynamicBullets: true
-    },
+                pagination: {
+                    el: 'uciq .swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true
+                },
 
-    breakpoints: {
-      0: { slidesPerView: 1.1 },
-      576: { slidesPerView: 2.2 },
-      992: { slidesPerView: 4 }
-    }
-  });
+                breakpoints: {
+                    0: {
+                        slidesPerView: 1.1
+                    },
+                    576: {
+                        slidesPerView: 2.2
+                    },
+                    992: {
+                        slidesPerView: 4
+                    }
+                }
+            });
 
-  // Hover to play video
-  document.querySelectorAll('uciq .video-card').forEach(card => {
-    const video = card.querySelector('video');
+            // Hover to play video
+            document.querySelectorAll('uciq .video-card').forEach(card => {
+                const video = card.querySelector('video');
 
-    card.addEventListener('mouseenter', () => {
-      video.play();
-    });
+                card.addEventListener('mouseenter', () => {
+                    video.play();
+                });
 
-    card.addEventListener('mouseleave', () => {
-      video.pause();
-      video.currentTime = 0;
-    });
-  });
+                card.addEventListener('mouseleave', () => {
+                    video.pause();
+                    video.currentTime = 0;
+                });
+            });
 
-});
+        });
+    </script>
 
-   </script>
+
+    {{-- <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in'); // no delay
+                        obs.unobserve(entry.target); // stop observing after fade-in
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            // Observe all existing product cards
+            document.querySelectorAll('.product_col').forEach(card => observer.observe(card));
+
+            // Lazy-loaded cards support
+            const productContainer = document.getElementById('trending-products');
+            if (productContainer) {
+                const mutationObserver = new MutationObserver(() => {
+                    const newCards = productContainer.querySelectorAll('.product_col:not(.fade-in)');
+                    newCards.forEach(card => observer.observe(card));
+                });
+                mutationObserver.observe(productContainer, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+    </script> --}}
+
 
 
 

@@ -227,7 +227,7 @@
                                     </div>
                                     <div class="col-md-2"></div>
                                     <div class="col-md-10">
-                                        <div id="variation" class="my-2" >
+                                        <div id="variation" class="my-2">
 
                                             <div class="shadow p-2 rounded">
                                                 <div id="variations_div" class=" p-2">
@@ -387,6 +387,94 @@
 
                                     </div>
 
+                                </div>
+                            </div>
+                            <div class="col-md-6 my-3">
+                                <div class="shadow p-2">
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            {{-- Fit Section --}}
+                                            <div class="form-group">
+                                                <label class="mr-3"><b>Fit</b></label>
+
+                                                @php
+                                                    $fitValue = old('fit', $product->fit ?? '');
+                                                @endphp
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="fit"
+                                                        value="" id="fit_none"
+                                                        {{ $fitValue == '' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="fit_none">None</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="fit"
+                                                        value="slim_fit" id="fit_slim"
+                                                        {{ $fitValue == 'slim_fit' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="fit_slim">Slim Fit</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="fit"
+                                                        value="regular_fit" id="fit_regular"
+                                                        {{ $fitValue == 'regular_fit' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="fit_regular">Regular Fit</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="fit"
+                                                        value="tapered_fit" id="fit_tapered"
+                                                        {{ $fitValue == 'tapered_fit' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="fit_tapered">Tapered Fit</label>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{-- Fabrication Section --}}
+                                            <div class="form-group">
+                                                <label class="mr-3"><b>Fabrication</b></label>
+
+                                                @php
+                                                    $fabricationValue = old('fabrication', $product->fabrication ?? '');
+                                                @endphp
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="fabrication"
+                                                        value="" id="fabrication_none"
+                                                        {{ $fabricationValue == '' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="fabrication_none">None</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="fabrication"
+                                                        value="knit" id="fabrication_knit"
+                                                        {{ $fabricationValue == 'knit' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="fabrication_knit">Knit</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="fabrication"
+                                                        value="woven" id="fabrication_woven"
+                                                        {{ $fabricationValue == 'woven' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="fabrication_woven">Woven</label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="fabrication"
+                                                        value="jersey" id="fabrication_jersey"
+                                                        {{ $fabricationValue == 'jersey' ? 'checked' : '' }}>
+                                                    <label class="form-check-label"
+                                                        for="fabrication_jersey">Jersey</label>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-12 my-3 mb-5">

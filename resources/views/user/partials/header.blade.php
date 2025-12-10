@@ -15,6 +15,11 @@
         .header__search--button__svg {
             color: #ffffff !important;
         }
+        .header__menu--link {
+    font-weight: bold;
+    font-size: 18px; /* change as needed */
+}
+
     </style>
     <div class="main__header header__sticky" style="
     background-color: <?php echo $business->header_bg_color ?? 'black'; ?> !important;
@@ -50,7 +55,7 @@
                         <p class="fs-6 lh-sm header_text_color">
                             {{ optional($business)->sub_title }}
                         </p>
-                    </a> 
+                    </a>
                 </div>
                 <div class="header__search--widget d-none d-lg-block">
                     <form class="d-flex header__search--form" action="#">
@@ -232,11 +237,16 @@ background-color:#06693B!important;
         <div class="container-fluid align-items-center" style="background-color:<?php echo $business->header_bottom_bg_color ?? ''; ?> !important;">
             {{-- #F36D21 --}}
             <div
-                class="header__bottom--inner position__relative d-none d-lg-flex justify-content-between align-items-center">
+                class="header__bottom--inner position__relative d-none d-lg-flex justify-content-center align-items-center">
                 <div class="header__menu text-align">
                     <nav class="header__menu--navigation">
-                        <ul class="d-flex">
+                        <ul class="d-flex ">
                             {{-- 2 step category menu --}}
+                            <li class="header__menu--items">
+                                <a class="header__menu--link " href="{{ route('index') }}">
+                                    Home
+                                </a>
+                            </li>
                             @foreach ($featured_categories as $category)
                                 @if (count($category->menu_child) > 0)
                                     <li class="header__menu--items">
@@ -259,14 +269,19 @@ background-color:#06693B!important;
                                     <li class="header__menu--items">
                                         <a class="header__menu--link "
                                             href="{{ route('products', ['category_id' => $category->id]) }}">
-                                            {{ $category->title }} 
+                                            {{ $category->title }}
                                         </a>
                                     </li>
                                 @endif
                             @endforeach
-                            <li class="header__menu--items d-none">
-                                <a class="header__menu--link " target="_blank" href="/9/page/used-phone">
-                                    Used Phone
+                            <li class="header__menu--items">
+                                <a class="header__menu--link " href="{{ route('about') }}">
+                                    About us
+                                </a>
+                            </li>
+                            <li class="header__menu--items">
+                                <a class="header__menu--link " href="{{ route('contact') }}">
+                                    Contact us
                                 </a>
                             </li>
                         </ul>
