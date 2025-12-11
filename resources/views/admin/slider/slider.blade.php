@@ -91,7 +91,7 @@
                                     <td><img class="shadow rounded border p-1"
                                             src="{{ asset('images/slider/' . $bottomSlider->image) }}" width="100%">
                                     </td>
-                                    <td>{{ $bottomSlider->link }}</td>
+                                    <td>{{ $bottomSlider->link ?? '' }}</td>
 
                                 </tr>
                             @endif

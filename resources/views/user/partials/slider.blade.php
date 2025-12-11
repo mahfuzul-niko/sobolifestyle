@@ -64,6 +64,6 @@
 <!-- End slider section -->
 
 <div class="container-fluid" style=" overflow:hidden;">
-    <a href="{{ $bottomSlider->link }}"> <img src="{{ asset('images/slider/' . $bottomSlider->image) }}" alt=""
+    <a href="{{ $bottomSlider->link ?? '' }}"> <img src="{{ asset('images/slider/' . $bottomSlider->image) }}" alt=""
             style="width:100%; height:100%; object-fit:cover; display:block;"></a>
 </div>
