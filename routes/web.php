@@ -168,7 +168,7 @@ Route::get('get-area/{id}', function ($id) {
 
 Route::get('/get-shipping-charge', [App\Http\Controllers\PageController::class, 'get_shipping_charge'])->name('shipping_charge.get');
 
-
+Route::post('/store_newsletter_subscriber', [App\Http\Controllers\SettingController::class, 'store_newsletter_subscriber'])->name('store_newsletter_subscriber');
 // API Routes End
 
 
@@ -338,6 +338,10 @@ Route::group(['prefix' => '/home', 'middleware' => ['auth', 'verified', 'adminAu
 		Route::get('/edit/{id}', [App\Http\Controllers\SliderController::class, 'edit'])->name('edit');
 		Route::post('/update/{id}', [App\Http\Controllers\SliderController::class, 'update'])->name('update');
 		Route::post('/destroy/{id}', [App\Http\Controllers\SliderController::class, 'destroy'])->name('destroy');
+
+		Route::get('/bottom', [App\Http\Controllers\SliderController::class, 'bottomIndex'])->name('bottom.index');
+		Route::post('/bottom/store', [App\Http\Controllers\SliderController::class, 'bottomSliderUpdate'])->name('bottom.store');
+
 	});
 
 	// Slider Side Banner Routes
@@ -376,6 +380,10 @@ Route::group(['prefix' => '/home', 'middleware' => ['auth', 'verified', 'adminAu
 		Route::post('/update', [App\Http\Controllers\SettingController::class, 'update'])->name(name: 'update');
 		Route::get('/reward-point', [App\Http\Controllers\SettingController::class, 'reward_point'])->name('reward.point');
 		Route::post('/reward-point/update/{id}', [App\Http\Controllers\SettingController::class, 'reward_point_update'])->name('reward.point.update');
+
+		Route::get('/newsletter_subscribers', [App\Http\Controllers\SettingController::class, 'newsletter_subscribers'])->name('newsletter_subscribers');
+		Route::post('/newsletter_subscribers_delete/{id}', [App\Http\Controllers\SettingController::class, 'newsletter_subscribers_delete'])->name('newsletter_subscribers.delete');
+		// Route::post('/store_newsletter_subscribers', [App\Http\Controllers\SettingController::class, 'store_newsletter_subscribers'])->name('store_newsletter_subscribers');
 	});
 
 	// Affiliate Routes

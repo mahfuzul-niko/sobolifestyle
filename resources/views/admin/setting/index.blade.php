@@ -126,10 +126,10 @@
                                     @enderror
                                 </div>
                             </div>
-                             <div class="col-md-12">
-                                  <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="form-group">
                                     <label>Title</label>
-                                    <input type="text" name="title"  value="{{ optional($setting)->title }}"
+                                    <input type="text" name="title" value="{{ optional($setting)->title }}"
                                         class="form-control @error('title') is-invalid @enderror">
                                     @error('title')
                                         <span class="invalid-feedback" role="alert">
@@ -139,9 +139,9 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                  <div class="form-group">
+                                <div class="form-group">
                                     <label>Sub Title</label>
-                                    <input type="text" name="sub_title"  value="{{ optional($setting)->sub_title }}"
+                                    <input type="text" name="sub_title" value="{{ optional($setting)->sub_title }}"
                                         class="form-control @error('sub_title') is-invalid @enderror">
                                     @error('sub_title')
                                         <span class="invalid-feedback" role="alert">
@@ -152,8 +152,22 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
+                                    <label>Footer Discription</label>
+                                    <input type="text" name="footer_discription"
+                                        value="{{ optional($setting)->footer_discription }}"
+                                        class="form-control @error('footer_discription') is-invalid @enderror">
+                                    @error('footer_discription')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
                                     <label>Address*</label>
-                                    <input type="text" name="address" required value="{{ optional($setting)->address }}"
+                                    <input type="text" name="address" required
+                                        value="{{ optional($setting)->address }}"
                                         class="form-control @error('address') is-invalid @enderror">
                                     @error('address')
                                         <span class="invalid-feedback" role="alert">

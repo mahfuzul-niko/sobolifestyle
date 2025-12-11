@@ -422,7 +422,6 @@
                                                         {{ $fitValue == 'regular_fit' ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="fit_regular">Regular Fit</label>
                                                 </div>
-
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="fit"
                                                         value="tapered_fit" id="fit_tapered"

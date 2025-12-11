@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FeatureVideo;
+use App\Models\Newsletter;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -201,6 +202,7 @@ class SettingController extends Controller
         $setting->name = $request->name;
         $setting->title = $request->title;
         $setting->sub_title = $request->sub_title;
+        $setting->footer_discription = $request->footer_discription;
 
         $setting->logo_color = $request->logo_color;
 
@@ -329,5 +331,30 @@ class SettingController extends Controller
     public function destroy(Setting $setting)
     {
         //
+    }
+    public function newsletter_subscribers()
+    {
+        $emails = Newsletter::orderBy('id', 'DESC')->get();
+        return view('admin.setting.newsletter-subscribers', compact('emails'));
+    }
+    public function newsletter_subscribers_delete($id)
+    {
+        $subscriber = Newsletter::findOrFail($id);
+        $subscriber->delete();
+        Alert::toast('Subscriber deleted successfully !', 'success');
+        return back();
+    }
+    public function store_newsletter_subscriber(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|unique:newsletters,email',
+        ]);
+
+        Newsletter::create([
+            'email' => $request->email,
+        ]);
+
+        Alert::toast('Subscribed to newsletter successfully !', 'success');
+        return back();
     }
 }

@@ -5,7 +5,7 @@
         <div class="main__footer d-flex justify-content-between" style="padding-bottom: 5px !important;">
 
             <div class="footer__widget footer__widget--width active">
-                <h2 class="footer__widget--title text-ofwhite h3"> Support
+                <h2 class="footer__widget--title text-ofwhite h3"> Get in touch
                     <button class="footer__widget--button" aria-label="footer widget button">
                         <svg class="footer__widget--title__arrowdown--icon" xmlns="http://www.w3.org/2000/svg"
                             width="12.355" height="8.394" viewBox="0 0 10.355 6.394">
@@ -14,8 +14,31 @@
                         </svg>
                     </button>
                 </h2>
-
                 <div class="footer__widget--inner" style="display: block;">
+                    <p class="text-light" style="width:300px">
+                        {{ optional($business)->footer_discription }}
+                    </p>
+                    <ul class="footer__widget--menu footer__widget--inner" style="display: block;">
+                        <li class="footer__widget--menu__list"><a class="footer-address-text"
+                                href="{{ $business->google_map_link ?? '' }}"
+                                target="_blank">{{ optional($business)->address }}</a></li>
+
+                        <li class="footer__widget--menu__list">
+                            <span class="footer__widget--menu__text">WhatsApp, Imo, Viber, Call</span>
+                            <a class="footer__widget--menu__text" href="tel:{{ $business->whatsapp ?? '' }}">
+                                {{ $business->whatsapp ?? '' }}
+                            </a>
+                        </li>
+
+                        <li class="footer__widget--menu__list">
+                            <span class="footer__widget--menu__text">E-mail: </span>
+                            <a class="footer__widget--menu__text" href="mailto:{{ optional($business)->email }}"
+                                style="">{{ optional($business)->email }}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                {{-- <div class="footer__widget--inner" style="display: block;">
                     <div class="flex flex-col gap-4" style="align-items:flex-start;">
                         @for ($n = 1; $n <= 2; $n++)
                             <div class="duration-300 px-6 py-3 rounded-full border-white border-primary-hover flex items-center gap-4"
@@ -113,47 +136,11 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <div class="footer__widget--menu__wrapper d-flex footer__widget--width active">
                 <div class="footer__widget">
-                    <h2 class="footer__widget--title text-ofwhite h3">About Us
-                        <button class="footer__widget--button" aria-label="footer widget button">
-                            <svg class="footer__widget--title__arrowdown--icon" xmlns="http://www.w3.org/2000/svg"
-                                width="12.355" height="8.394" viewBox="0 0 10.355 6.394">
-                                <path d="M15.138,8.59l-3.961,3.952L7.217,8.59,6,9.807l5.178,5.178,5.178-5.178Z"
-                                    transform="translate(-6 -8.59)" fill="currentColor"></path>
-                            </svg>
-                        </button>
-                    </h2>
-                    <ul class="footer__widget--menu footer__widget--inner" style="display: block;">
-                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
-                                href="{{ route('about') }}">About Us</a></li>
-                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
-                                href="{{ route('login') }}">Login</a></li>
-                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
-                                href="{{ route('register') }}">Register</a></li>
-                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
-                                href="{{ route('carts') }}">Shopping Cart</a></li>
-                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
-                                href="{{ route('checkout') }}">Checkout</a></li>
-                        @php
-                            $blogs = App\Models\Blog::count();
-                        @endphp
-                        @if ($blogs)
-                            <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
-                                    href="{{ route('user.blog') }}">Blogs</a></li>
-                        @endif
-                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
-                                href="{{ route('order.track') }}">Track order</a></li>
-                    </ul>
-                </div>
-
-
-            </div>
-            <div class="footer__widget--menu__wrapper d-flex footer__widget--width active">
-                <div class="footer__widget">
-                    <h2 class="footer__widget--title text-ofwhite h3"> Help
+                    <h2 class="footer__widget--title text-ofwhite h3"> Policy
                         <button class="footer__widget--button" aria-label="footer widget button">
                             <svg class="footer__widget--title__arrowdown--icon" xmlns="http://www.w3.org/2000/svg"
                                 width="12.355" height="8.394" viewBox="0 0 10.355 6.394">
@@ -164,8 +151,8 @@
                     </h2>
                     <ul class="footer__widget--menu footer__widget--inner" style="display: block;">
 
-                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
-                                href="{{ route('contact') }}">Contact Us</a></li>
+                        {{-- <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('contact') }}">Contact Us</a></li> --}}
 
                         @foreach ($pages as $page)
                             <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
@@ -178,7 +165,7 @@
             </div>
             <div class="footer__widget--menu__wrapper d-flex footer__widget--width active">
                 <div class="footer__widget">
-                    <h2 class="footer__widget--title text-ofwhite h3">Stay Connected
+                    <h2 class="footer__widget--title text-ofwhite h3">Quick Links
                         <button class="footer__widget--button" aria-label="footer widget button">
                             <svg class="footer__widget--title__arrowdown--icon" xmlns="http://www.w3.org/2000/svg"
                                 width="12.355" height="8.394" viewBox="0 0 10.355 6.394">
@@ -188,26 +175,51 @@
                         </button>
                     </h2>
                     <ul class="footer__widget--menu footer__widget--inner" style="display: block;">
-                        <li class="footer__widget--menu__list mb-5"><a class="footer__widget--menu__text"
-                                target="_blank">{{ config('app.name') }}</a></li>
+                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('about') }}">About Us</a></li>
+                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('contact') }}">Contact Us</a></li>
+                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('order.track') }}">Track order</a></li>
+                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('products') }}">Shop</a></li>
+                        {{-- <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('login') }}">Login</a></li>
+                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('register') }}">Register</a></li>
+                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('carts') }}">Shopping Cart</a></li>
+                        <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                href="{{ route('checkout') }}">Checkout</a></li> --}}
+                        {{-- @php
+                            $blogs = App\Models\Blog::count();
+                        @endphp
+                        @if ($blogs)
+                            <li class="footer__widget--menu__list"><a class="footer__widget--menu__text"
+                                    href="{{ route('user.blog') }}">Blogs</a></li>
+                        @endif --}}
 
-                        <li class="footer__widget--menu__list"><a class="footer-address-text"
-                                href="{{ $business->google_map_link ?? '' }}"
-                                target="_blank">{{ optional($business)->address }}</a></li>
-
-                        <li class="footer__widget--menu__list">
-                            <span class="footer__widget--menu__text">WhatsApp, Imo, Viber, Call</span>
-                            <a class="footer__widget--menu__text" href="tel:{{ $business->whatsapp ?? '' }}">
-                                {{ $business->whatsapp ?? '' }}
-                            </a>
-                        </li>
-
-                        <li class="footer__widget--menu__list">
-                            <span class="footer__widget--menu__text">E-mail: </span>
-                            <a class="footer__widget--menu__text" href="mailto:{{ optional($business)->email }}"
-                                style="">{{ optional($business)->email }}</a>
-                        </li>
                     </ul>
+                </div>
+            </div>
+            <div class="footer__widget--menu__wrapper d-flex footer__widget--width active">
+                <div class="footer__widget">
+                    <h2 class="footer__widget--title text-ofwhite h3">Newsletter
+                    </h2>
+                    <form action="{{ route('store_newsletter_subscriber') }}" method="POST" style="margin-top:10px;">
+                        @csrf
+                        <div style="display:flex;gap:10px;">
+                            <input type="email" name="email" required="" placeholder="Enter your email"
+                                style="padding:10px;border-radius:8px;border:none;width:200px;">
+                            <?php $footerBg = $business->footer_bg_color ?? 'black'; ?>
+                            <button type="submit"
+                                style="background:white;color:black;padding:10px 18px;border-radius:8px;font-weight:bold;border:1px solid black;transition:all 0.3s ease;"
+                                onmouseover="this.style.background='<?= $footerBg ?>'; this.style.color='white'; this.style.border='1px solid white';"
+                                onmouseout="this.style.background='white'; this.style.color='black'; this.style.border='1px solid black';">
+                                Subscribe
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
