@@ -360,7 +360,7 @@ class SettingController extends Controller
     }
     public function followUsImage()
     {
-        $followImages = FollowImage::orderBy('id', 'DESC')->get();
+        $followImages = FollowImage::get();
         return view('admin.setting.follow-us', compact('followImages'));
     }
     public function updateFollowUsImage(Request $request, $key)
