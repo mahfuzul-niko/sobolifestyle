@@ -26,16 +26,16 @@
         /* ----------------------------
    ISOLATED WRAPPER — prevents conflicts
 ----------------------------- */
+
         .logo-anim-wrapper {
-            display: flex;
-            /* use flexbox */
-            justify-content: flex-start;
-            /* align items to the left */
-            align-items: center;
-            /* optional: vertically center */
+            width: auto;
+            display: block;
+            text-align: left;
+            /* left align */
+            padding: 0;
+            margin: 0;
         }
 
-     
         .logo-anim-wrapper svg {
             width: 100%;
             height: auto;
@@ -98,7 +98,7 @@
                                     src="{{ asset('images/website/' . optional($business)->header_logo) }}"
                                     alt="{{ optional($business)->name }}" style="height: 60px; width: auto;"></a></h1>
                     </div> --}}
-                    <div class="logo-anim-wrapper">
+                    <div class="logo-anim-wrapper" >
 
                         <svg viewBox="0 0 2156.58 560.41" xmlns="http://www.w3.org/2000/svg">
 
