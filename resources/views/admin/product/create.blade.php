@@ -367,7 +367,7 @@
 
                             <div class="col-md-12 my-3 mb-5">
                                 <div class="shadow row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label class="col-form-label"><b>Discount Type</b></label>
                                         <select name="discount_type" class="form-control" id="">
                                             <option value="no">NO</option>
@@ -376,14 +376,16 @@
                                         </select>
 
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label class="col-form-label"><b>Discount Amount</b></label>
                                         <input type="number" name="discount_amount"
                                             value="{{ old('discount_amount') }}"
                                             class="form-control @error('discount_amount') is-invalid @enderror">
                                     </div>
 
+
                                 </div>
+
                             </div>
 
                             <div class="form-group col-md-12">

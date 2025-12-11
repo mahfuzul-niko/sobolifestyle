@@ -34,10 +34,11 @@
             /* left align */
             padding: 0;
             margin: 0;
+           
         }
 
         .logo-anim-wrapper svg {
-            width: 100%;
+            width: 80%;
             height: auto;
             display: block;
         }
@@ -100,7 +101,7 @@
                     </div> --}}
                     <div class="logo-anim-wrapper" >
 
-                        <svg viewBox="0 0 2156.58 560.41" xmlns="http://www.w3.org/2000/svg">
+                        <svg viewBox="1200 70 1500 560" xmlns="http://www.w3.org/2000/svg">
 
 
                             <path class="cls-2"

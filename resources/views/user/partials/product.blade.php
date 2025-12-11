@@ -134,15 +134,15 @@
                     <li class="product__items--action__list  gap-2">
                         @if ($product->type == 'single')
                             @if (optional($stock_price)->qty > 0)
-                                {{-- Buy Now --}}
+                                {{-- Choose Product --}}
                                 {{-- <button class="product__items--action__btn add__to--cart w-100" 
                                     onclick="addToCart({{ $product->id }}, 'details', 'checkout', 'single')"
                                     type="button">
-                                    <span class="add__to--cart__text"> Buy Now </span>
+                                    <span class="add__to--cart__text"> Choose Product </span>
                                 </button> --}}
                                 <a class="product__items--action__btn add__to--cart w-100" style=""
                                     href="{{ route('single.product', [$product->id, Str::slug($product->title)]) }}">
-                                    <span class="add__to--cart__text">Buy Now</span>
+                                    <span class="add__to--cart__text">Choose Product</span>
                                 </a>
                                 {{-- Add to cart --}}
                                 {{-- <button class="product__items--action__btn add__to--cart" style=""
@@ -162,7 +162,7 @@
                                 {{-- Select Product --}}
                                 <a class="product__items--action__btn add__to--cart w-100" style=""
                                     href="{{ route('single.product', [$product->id, Str::slug($product->title)]) }}">
-                                    <span class="add__to--cart__text">Buy Now</span>
+                                    <span class="add__to--cart__text">Choose Product</span>
                                 </a>
                             @else
                                 {{-- Out of Stock --}}
