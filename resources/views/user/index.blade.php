@@ -1,5 +1,16 @@
 @extends('user.inc.master')
-@php($business_info = business_info())
+
+ @php
+        $top = $followImages->where('key', 'top_image')->first();
+        $left = $followImages->where('key', 'left_image')->first();
+        $middle = $followImages->where('key', 'middle_image')->first();
+        $right = $followImages->where('key', 'right_image')->first();
+
+        $fallback = asset('images/blank.png');
+        $business_info = business_info()
+    @endphp
+
+{{-- @php($business_info = business_info()) --}}
 
 @section('title')
     Home
@@ -117,17 +128,17 @@
         }
 
         /* .product_col {
-            opacity: 0;
-            transform: translateY(50px) scale(0.95);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            
-        }
+                                                        opacity: 0;
+                                                        transform: translateY(50px) scale(0.95);
+                                                        transition: opacity 0.5s ease, transform 0.5s ease;
+                                                        
+                                                    }
 
-        .product_col.fade-in {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        } */
+                                                    .product_col.fade-in {
+                                                        opacity: 1;
+                                                        transform: translateY(0) scale(1);
+                                                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                                                    } */
     </style>
     @include('user.partials.slider')
 
@@ -353,9 +364,57 @@
             </div>
         </section>
     @endif
+
     <div id="featured_products"></div>
 
     <div id="best_selling_productsStop"></div>
+   
+
+    <section class="product__section section--padding py-5">
+        <div class="container-fluid">
+            <div class="section__heading text-center mb-50">
+                <h2 class="section__heading--maintitle">Follow Us</h2>
+            </div>
+
+            <div class="row">
+
+                <!-- TOP IMAGE FULL WIDTH -->
+                <div class="col-md-12 mb-4">
+                    <a href="{{ $top && $top->link ? $top->link : '#' }}">
+                        <img src="{{ $top && $top->image ? asset('images/follow_us/' . $top->image) : $fallback }}"
+                            class="img-fluid w-100" alt="">
+                    </a>
+                </div>
+
+                <!-- LEFT -->
+                <div class="col-md-4 mb-4">
+                    <a href="{{ $left && $left->link ? $left->link : '#' }}">
+                        <img src="{{ $left && $left->image ? asset('images/follow_us/' . $left->image) : $fallback }}"
+                            class="img-fluid w-100" alt="">
+                    </a>
+                </div>
+
+                <!-- MIDDLE -->
+                <div class="col-md-4 mb-4">
+                    <a href="{{ $middle && $middle->link ? $middle->link : '#' }}">
+                        <img src="{{ $middle && $middle->image ? asset('images/follow_us/' . $middle->image) : $fallback }}"
+                            class="img-fluid w-100" alt="">
+                    </a>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col-md-4 mb-4">
+                    <a href="{{ $right && $right->link ? $right->link : '#' }}">
+                        <img src="{{ $right && $right->image ? asset('images/follow_us/' . $right->image) : $fallback }}"
+                            class="img-fluid w-100" alt="">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
     {{-- featured brands section --}}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="" crossorigin="anonymous"

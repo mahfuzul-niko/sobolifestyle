@@ -19,8 +19,8 @@
         }
 
         /* .variant__size--value {
-                                                width: 6rem !important;
-                                            } */
+                                                    width: 6rem !important;
+                                                } */
         .single-product-bg-info {
             margin-bottom: 5px;
         }
@@ -43,7 +43,7 @@
     @php
 
         $stock_price = $product->single_stock;
-        
+
         $sale_text = 'sale';
         $stock_qty = '';
         $stock_qty_text = 'In Stock';
@@ -63,7 +63,6 @@
             }
             $stock_qty = optional($stock_price)->qty . ' ' . optional($product)->unit_type;
         } else {
-            
             $variations = $product->variation_stock;
             $min_price = $variations->min('price');
             $max_price = $variations->max('price');
@@ -458,7 +457,7 @@
                                     <input type="hidden" name="product_type" id="product_type" value="variation">
                                     <input type="hidden" name="stock_qty" id="stock_qty_{{ optional($product)->id }}"
                                         value="0">
-{{-- here  --}}
+                                    {{-- here  --}}
                                     {{-- Buy Now  addToCart(product_id, selected_variation_id2, type, page, product_type2) --}}
                                     <button class="quickview__cart--btn primary__btn mx-3"
                                         id="buy_now_button{{ optional($product)->id }}"
@@ -602,7 +601,7 @@
         referrerpolicy="no-referrer"></script>
     <script>
         let baseUrl = $('#baseURL').val();
-       
+
 
         function select_variation(product_id) {
             $('#selected_variation_id' + product_id).val('');
@@ -619,7 +618,7 @@
                 method: 'post',
                 data: $('#variation_form' + product_id).serialize(),
                 success: function(response) {
-                     console.log('response:', response);
+                    console.log('response:', response);
                     if (response.variation_status == 1) {
                         if (response.image != null) {
                             $('#variationImage').html('<img class="shadow border rounded" src="' + baseUrl +

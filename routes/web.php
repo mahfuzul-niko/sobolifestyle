@@ -383,7 +383,11 @@ Route::group(['prefix' => '/home', 'middleware' => ['auth', 'verified', 'adminAu
 
 		Route::get('/newsletter_subscribers', [App\Http\Controllers\SettingController::class, 'newsletter_subscribers'])->name('newsletter_subscribers');
 		Route::post('/newsletter_subscribers_delete/{id}', [App\Http\Controllers\SettingController::class, 'newsletter_subscribers_delete'])->name('newsletter_subscribers.delete');
-		// Route::post('/store_newsletter_subscribers', [App\Http\Controllers\SettingController::class, 'store_newsletter_subscribers'])->name('store_newsletter_subscribers');
+
+		Route::get('/follow-us/images', [App\Http\Controllers\SettingController::class, 'followUsImage'])->name('follow-us');
+		Route::post('/follow-us/images/update/{key}', [App\Http\Controllers\SettingController::class, 'updateFollowUsImage'])->name('follow-us.update');
+		// Route::delete('/follow-us/images/destroy/{id}', [App\Http\Controllers\SettingController::class, 'destroyFollowUsImage'])->name('follow-us.destroy');
+
 	});
 
 	// Affiliate Routes

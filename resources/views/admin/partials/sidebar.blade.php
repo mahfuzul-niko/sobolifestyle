@@ -56,11 +56,17 @@ $user = user();
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('setting.follow-us') }}" class="nav-link">
+                                    <i class="fas fa-angle-right"></i>
+                                    <p>Follow Us</p>
+                                </a>
+                            </li>
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('setting.feature.video') }}" class="nav-link">
                                     <i class="fas fa-angle-right"></i>
                                     <p>Feature Video</p>
                                 </a>
-                            </li>
+                            </li> --}}
 
                             <li class="nav-item">
                                 <a href="{{ route('about_us.index') }}" class="nav-link">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BottomSlider;
+use App\Models\FollowImage;
 use App\Models\Page;
 use App\Models\Product;
 use App\Models\Category;
@@ -64,11 +65,12 @@ class PageController extends Controller
 
         $sliders = Slider::where('is_active', 1)->orderBy('serial_number', 'ASC')->get();
         $bottomSlider = BottomSlider::first();
+        $followImages = FollowImage::get();
         $sliderSideBanner = SliderSideBanner::where('is_active', 1)->orderBy('serial_number', 'ASC')->take(2)->get();
         $featured_categories = Category::where('is_featured', 1)->orderBy('position', 'ASC')->get(['id', 'title', 'image']);
         $featured_products = Product::where(['is_active' => 1, 'is_featured' => 1])->orderBy('id', 'DESC')->limit(30)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes']);
         $trending_products = Product::orderBy('id', 'DESC')->where(['is_active' => 1, 'is_tranding' => 1])->inRandomOrder()->limit(30)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes']);
-        return view('user.index', compact('trending_products', 'featured_categories', 'sliders', 'sliderSideBanner', 'featured_products','bottomSlider'));
+        return view('user.index', compact('trending_products', 'featured_categories', 'sliders', 'sliderSideBanner', 'featured_products','bottomSlider','followImages'));
 
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FeatureVideo;
+use App\Models\FollowImage;
 use App\Models\Newsletter;
 use App\Models\Setting;
 use App\Models\User;
@@ -356,5 +357,54 @@ class SettingController extends Controller
 
         Alert::toast('Subscribed to newsletter successfully !', 'success');
         return back();
+    }
+    public function followUsImage()
+    {
+        $followImages = FollowImage::orderBy('id', 'DESC')->get();
+        return view('admin.setting.follow-us', compact('followImages'));
+    }
+    public function updateFollowUsImage(Request $request, $key)
+    {
+        $request->validate([
+            'image' => 'nullable|image',
+            'link' => 'nullable|url',
+        ]);
+
+        $followImage = FollowImage::where('key', $key)->firstOrFail();
+
+        $followImage->link = $request->link;
+
+        if ($request->image) {
+            if ($followImage->image && File::exists('images/follow_us/' . $followImage->image)) {
+                File::delete('images/follow_us/' . $followImage->image);
+            }
+
+            $image = $request->file('image');
+            $img = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/follow_us/' . $img);
+
+            Image::make($image)->save($location);
+
+            $followImage->image = $img;
+        }
+
+        $followImage->save();
+
+        Alert::toast('Follow Us Image has been updated', 'success');
+        return back();
+    }
+
+    public function destroyFollowUsImage($id)
+    {
+        $followImage = FollowImage::findOrFail($id);
+
+        // Delete file from storage if exists
+        if ($followImage->image && File::exists('images/follow_us/' . $followImage->image)) {
+            File::delete('images/follow_us/' . $followImage->image);
+        }
+
+        $followImage->delete();
+
+        return redirect()->back()->with('success', 'Follow Us image deleted successfully.');
     }
 }
