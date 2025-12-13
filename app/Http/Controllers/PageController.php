@@ -101,7 +101,7 @@ class PageController extends Controller
         if (empty($category_id) && empty($brand_array)) {// nothing is active
             $products = Product::where('is_active', 1)
                 ->orderBy('id', 'DESC')
-                ->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes']);
+                ->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes','rating']);
         } else if (!empty($category_id) && empty($brand_info)) { //only category is active.
 
             $category_info = Category::find($category_id);

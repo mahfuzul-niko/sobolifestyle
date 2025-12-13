@@ -540,8 +540,11 @@
                                 @endif
                             @endforeach
                         </span>
-                        <div class="footer__social" style="color: #000 !important">
+                        <div class="footer__social mt-1" style="color: #000 !important">
                             <ul class="social__shear d-flex">
+                                <li class="social__shear--list">
+                                    <strong>Share :</strong>
+                                </li>
                                 <!-- Facebook -->
                                 <li class="social__shear--list">
                                     <a class="social__shear--list__icon" target="_blank"
