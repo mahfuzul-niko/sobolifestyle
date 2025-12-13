@@ -19,8 +19,8 @@
         }
 
         /* .variant__size--value {
-                                                        width: 6rem !important;
-                                                    } */
+                                                                width: 6rem !important;
+                                                            } */
         .single-product-bg-info {
             margin-bottom: 5px;
         }
@@ -276,9 +276,21 @@
                                         @endif
                                     @else
                                         <span class="single-product-bg-info"
-                                            id="product_price_info{{ optional($product)->id }}">Price Range:
-                                            {{ number_format($min_price) }}৳ <span class="price__divided"></span>
-                                            {{ number_format($max_price) }}৳ </span>
+                                            id="product_price_info{{ optional($product)->id }}">
+                                            @if ($min_price == $max_price)
+                                                <strong class="price-amount">
+                                                    <span class="price-currency ">৳</span>{{ number_format($min_price) }}
+                                                </strong>
+                                            @else
+                                                <strong class="price-amount">
+                                                    <span class="price-currency">৳</span>{{ number_format($min_price) }}
+                                                </strong>
+                                                <span class="price__divided"></span>
+                                                <strong class="price-amount">
+                                                    <span class="price-currency">৳</span>{{ number_format($max_price) }}
+                                                </strong>
+                                            @endif
+                                        </span>
                                     @endif
                                     {{-- Status --}}
                                     <span class="single-product-bg-info">Status: {{ $stock_qty_text }}</span>
@@ -489,7 +501,7 @@
                                 @endif
                             </div>
                         </form>
-                        
+
                     </div>
                     {{-- </form> --}}
                 </div>

@@ -68,9 +68,9 @@ class PageController extends Controller
         $followImages = FollowImage::get();
         $sliderSideBanner = SliderSideBanner::where('is_active', 1)->orderBy('serial_number', 'ASC')->take(2)->get();
         $featured_categories = Category::where('is_featured', 1)->orderBy('position', 'ASC')->get(['id', 'title', 'image']);
-        $featured_products = Product::where(['is_active' => 1, 'is_featured' => 1])->orderBy('id', 'DESC')->limit(30)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes','rating']);
-        $trending_products = Product::orderBy('id', 'DESC')->where(['is_active' => 1, 'is_tranding' => 1])->inRandomOrder()->limit(30)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes','rating']);
-        return view('user.index', compact('trending_products', 'featured_categories', 'sliders', 'sliderSideBanner', 'featured_products','bottomSlider','followImages'));
+        $featured_products = Product::where(['is_active' => 1, 'is_featured' => 1])->orderBy('id', 'DESC')->limit(30)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes', 'rating']);
+        $trending_products = Product::orderBy('id', 'DESC')->where(['is_active' => 1, 'is_tranding' => 1])->inRandomOrder()->limit(30)->get(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes', 'rating']);
+        return view('user.index', compact('trending_products', 'featured_categories', 'sliders', 'sliderSideBanner', 'featured_products', 'bottomSlider', 'followImages'));
 
     }
 
@@ -291,22 +291,34 @@ class PageController extends Controller
             $variation_status = 1;
 
 
-
             if ($product_info->discount_type <> 'no') {
+
                 if ($product_info->discount_type == 'flat') {
-                    $old_price = $info->price - optional($product_info)->discount_amount;
-                } else if ($product_info->discount_type == 'percentage') {
-                    $discount_amount_tk = (optional($product_info)->discount_amount * $info->price) / 100;
-                    $old_price = $info->price - $discount_amount_tk;
+                    $final_price = $info->price - $product_info->discount_amount;
+                } elseif ($product_info->discount_type == 'percentage') {
+                    $discount_amount_tk = ($product_info->discount_amount * $info->price) / 100;
+                    $final_price = $info->price - $discount_amount_tk;
                 }
+
                 $price_info .= '
-                <span class="current__price">৳ ' . number_format($old_price, 2) . '</span>
-                <span class="price__divided"></span>
-                ';
-                $price_info .= '<span class="old__price">৳ ' . number_format($info->price, 2) . '</span>';
+        <strong class="price-amount">
+            <span class="price-currency">৳</span>' . number_format($final_price, 2) . '
+        </strong>
+        <span class="price__divided"></span>
+        <strike class="old-price">
+            <span class="price-currency">৳</span>' . number_format($info->price, 2) . '
+        </strike>
+    ';
+
             } else {
-                $price_info .= '<span class="current__price">৳ ' . number_format($info->price, 2) . '</span>';
+
+                $price_info .= '
+        <strong class="price-amount">
+            <span class="price-currency">৳</span>' . number_format($info->price, 2) . '
+        </strong>
+    ';
             }
+
         }
 
         $image = optional($info)->image;
