@@ -19,8 +19,8 @@
         }
 
         /* .variant__size--value {
-                                                                width: 6rem !important;
-                                                            } */
+                                                                                        width: 6rem !important;
+                                                                                    } */
         .single-product-bg-info {
             margin-bottom: 5px;
         }
@@ -240,8 +240,33 @@
                             @endif
                         </div>
                         {{-- Name --}}
-                        <h2 class="product__details--info__title mb-15" title="{{ $product->title }}">
+                        <h2 class="product__details--info__title mb-1" title="{{ $product->title }}">
                             {{ $product->title }}</h2>
+                        <div class="product__rating">
+                            @php
+                                $rating = round($product->rating * 2) / 2; // Round to nearest 0.5
+                                $fullStars = floor($rating);
+                                $halfStar = $rating - $fullStars == 0.5 ? true : false;
+                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                            @endphp
+
+                            {{-- Full stars --}}
+                            @for ($i = 0; $i < $fullStars; $i++)
+                                <span style="color: gold; font-weight: bold;">★</span>
+                            @endfor
+
+                            {{-- Half star --}}
+                            @if ($halfStar)
+                                <span style="color: gold; font-weight: bold;">☆</span> {{-- you can use a half-star icon if you have Font Awesome --}}
+                            @endif
+
+                            {{-- Empty stars --}}
+                            @for ($i = 0; $i < $emptyStars; $i++)
+                                <span style="color: gray;">★</span>
+                            @endfor
+
+                            <span style="margin-left:5px;">({{ number_format($product->rating, 1) }})</span>
+                        </div>
                         <div class="row">
                             <div class="col-md-12 col-12">
                                 @if (!is_null($product->category))
@@ -423,84 +448,100 @@
                         <form action="javascript:void(0)" id="add_to_server{{ optional($product)->id }}" method="post">
                             <input type="hidden" name="product_id" id="product_id"
                                 value="{{ optional($product)->id }}">
-                            <div class="product__variant--list quantity d-flex align-items-center mb-20">
-                                <div class="quantity__box">
-                                    <button type="button" class="quantity__value quickview__value--quantity decrease"
-                                        onclick="quantity_change('de', {{ optional($product)->id }})"
-                                        aria-label="quantity value" value="Decrease Value">-</button>
-                                    <label>
-                                        <input type="number"
-                                            class="quantity__number quickview__value--number quantity__number_{{ optional($product)->id }}"
-                                            name="cart_qty_input" id="cart_qty_input" value="1" />
+                            <div class="d-block d-md-flex align-items-start gap-2">
+                                <div class="product__variant--list quantity d-flex align-items-center mt-1 mb-3">
+                                    <div class="quantity__box">
+                                        <button type="button" class="quantity__value quickview__value--quantity bg-light"
+                                            onclick="quantity_change('de', {{ optional($product)->id }})"
+                                            aria-label="quantity value" value="Decrease Value">-</button>
+                                        <label>
+                                            <input type="number"
+                                                class="quantity__number quickview__value--number quantity__number_{{ optional($product)->id }}"
+                                                name="cart_qty_input" id="cart_qty_input" value="1" />
 
-                                    </label>
-                                    <button type="button" class="quantity__value quickview__value--quantity increase"
-                                        onclick="quantity_change('in', {{ optional($product)->id }})"
-                                        aria-label="quantity value" value="Increase Value">+</button>
+                                        </label>
+                                        <button type="button" class="quantity__value quickview__value--quantity bg-light"
+                                            onclick="quantity_change('in', {{ optional($product)->id }})"
+                                            aria-label="quantity value" value="Increase Value">+</button>
+                                    </div>
+
+                                    <div class="stock-qty d-none">
+                                        <p class="ps-3" id="stock_qty_show{{ optional($product)->id }}">
+                                            {{ $stock_qty }}</p>
+                                    </div>
                                 </div>
 
-                                <div class="stock-qty d-none">
-                                    <p class="ps-3" id="stock_qty_show{{ optional($product)->id }}">
-                                        {{ $stock_qty }}</p>
+                                <div>
+                                    <input type="hidden" name="selected_variation_id"
+                                        id="selected_variation_id{{ optional($product)->id }}" value="">
 
-                                </div>
-
-                            </div>
-
-                            <div>
-                                <input type="hidden" name="selected_variation_id"
-                                    id="selected_variation_id{{ optional($product)->id }}" value="">
-
-                                @if ($product->type == 'single')
-                                    <input type="hidden" name="product_type" id="product_type" value="single">
-                                    <input type="hidden" name="stock_qty" id="stock_qty_{{ optional($product)->id }}"
-                                        value="{{ optional($stock_price)->qty }}">
-                                    @if (optional($stock_price)->qty > 0)
-                                        <button class="ms-0 quickview__cart--btn primary__btn"
-                                            onclick="addToCart({{ optional($product)->id }}, 'details', 'cart', 'single')"
-                                            id="add_to_cart_button{{ optional($product)->id }}" type="button">
-                                            Add To Cart
-                                        </button>
-                                        <button class="quickview__cart--btn primary__btn"
+                                    @if ($product->type == 'single')
+                                        <input type="hidden" name="product_type" id="product_type" value="single">
+                                        <input type="hidden" name="stock_qty"
+                                            id="stock_qty_{{ optional($product)->id }}"
+                                            value="{{ optional($stock_price)->qty }}">
+                                        @if (optional($stock_price)->qty > 0)
+                                            <button class="ms-0 quickview__cart--btn primary__btn"
+                                                onclick="addToCart({{ optional($product)->id }}, 'details', 'cart', 'single')"
+                                                id="add_to_cart_button{{ optional($product)->id }}" type="button">
+                                                Add To Cart
+                                            </button>
+                                            <button class="quickview__cart--btn primary__btn"
+                                                id="buy_now_button{{ optional($product)->id }}"
+                                                onclick="addToCart({{ optional($product)->id }}, 'details', 'checkout', 'single')"
+                                                type="button">Buy Now</button>
+                                        @endif
+                                    @else
+                                        <input type="hidden" name="product_type" id="product_type" value="variation">
+                                        <input type="hidden" name="stock_qty"
+                                            id="stock_qty_{{ optional($product)->id }}" value="0">
+                                        {{-- here  --}}
+                                        {{-- Buy Now  addToCart(product_id, selected_variation_id2, type, page, product_type2) --}}
+                                        <button class="quickview__cart--btn primary__btn  ms-0"
                                             id="buy_now_button{{ optional($product)->id }}"
-                                            onclick="addToCart({{ optional($product)->id }}, 'details', 'checkout', 'single')"
+                                            onclick="addToCart({{ $product->id }}, 5, 'details', 'checkout', 'variation')"
                                             type="button">Buy Now</button>
-                                    @endif
-                                @else
-                                    <input type="hidden" name="product_type" id="product_type" value="variation">
-                                    <input type="hidden" name="stock_qty" id="stock_qty_{{ optional($product)->id }}"
-                                        value="0">
-                                    {{-- here  --}}
-                                    {{-- Buy Now  addToCart(product_id, selected_variation_id2, type, page, product_type2) --}}
-                                    <button class="quickview__cart--btn primary__btn mx-3"
-                                        id="buy_now_button{{ optional($product)->id }}"
-                                        onclick="addToCart({{ $product->id }}, 5, 'details', 'checkout', 'variation')"
-                                        type="button">Buy Now</button>
-                                    {{-- Add to cart  addToCart(product_id, selected_variation_id2, type, page, product_type2) --}}
-                                    <button class="ms-0 quickview__cart--btn primary__btn"
-                                        id="add_to_cart_button{{ optional($product)->id }}"
-                                        onclick="addToCart({{ $product->id }}, 5, 'details', 'cart', 'variation')"
-                                        type="button">Add To Cart</button>
+                                        {{-- Add to cart  addToCart(product_id, selected_variation_id2, type, page, product_type2) --}}
+                                        <button class=" quickview__cart--btn primary__btn ms-0"
+                                            id="add_to_cart_button{{ optional($product)->id }}"
+                                            onclick="addToCart({{ $product->id }}, 5, 'details', 'cart', 'variation')"
+                                            type="button">Add To Cart</button>
 
-                                    <h3 class="m-3 text-danger fw-bold"
-                                        id="notification_show{{ optional($product)->id }}" style="display: none;">Please
-                                        Select a Variation</h3>
-                                @endif
-                                @if (optional($stock_price)->qty > 0)
-                                    <a class="product__items--action__btn ms-0 mx-3"
-                                        onclick="addToWishlist({{ $product->id }})" href="javascript:void(0)">
-                                        <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg"
-                                            width="25.51" height="23.443" viewBox="0 0 512 512">
-                                            <path
-                                                d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64c-52.76 0-94.54 44.14-95.08 96.81-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0018 0c96.26-65.34 184.09-143.09 183-252.42-.54-52.67-42.32-96.81-95.08-96.81z"
-                                                fill="none" stroke="currentColor" stroke-linecap="round"
-                                                stroke-linejoin="round" stroke-width="32"></path>
-                                        </svg>
-                                        <span class="visually-hidden">Wishlist</span>
-                                    </a>
-                                @endif
+                                        <h3 class="m-3 text-danger fw-bold"
+                                            id="notification_show{{ optional($product)->id }}" style="display: none;">
+                                            Please
+                                            Select a Variation</h3>
+                                    @endif
+                                    @if (optional($stock_price)->qty > 0)
+                                        <a class="product__items--action__btn ms-0 mx-3"
+                                            onclick="addToWishlist({{ $product->id }})" href="javascript:void(0)">
+                                            <svg class="product__items--action__btn--svg"
+                                                xmlns="http://www.w3.org/2000/svg" width="25.51" height="23.443"
+                                                viewBox="0 0 512 512">
+                                                <path
+                                                    d="M352.92 80C288 80 256 144 256 144s-32-64-96.92-64c-52.76 0-94.54 44.14-95.08 96.81-1.1 109.33 86.73 187.08 183 252.42a16 16 0 0018 0c96.26-65.34 184.09-143.09 183-252.42-.54-52.67-42.32-96.81-95.08-96.81z"
+                                                    fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="32"></path>
+                                            </svg>
+                                            <span class="visually-hidden">Wishlist</span>
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
                         </form>
+                        <span class=" lh-1 d-inline-block text-muted mt-2">
+                            Note : Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ea sapiente id quod?
+                            Praesentium exercitationem dolor ex ducimus molestias laudantium.
+                        </span>
+                        <span>
+                            <strong>Categories:</strong>
+                            @foreach ($product_categories_details as $index => $category)
+                                {{ $category->title }}@if (!$loop->last)
+                                    /
+                                @endif
+                            @endforeach
+                        </span>
+
 
                     </div>
                     {{-- </form> --}}

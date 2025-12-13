@@ -215,15 +215,17 @@ class PageController extends Controller
         if (!is_null($product)) {
 
             $product_categories = ProductWithCategory::where('product_id', $product->id)->pluck('category_id');
-
+            $product_categories_details = Category::whereIn('id', $product_categories)->get();
+            
             $similar_products = Product::join('product_with_categories', 'product_with_categories.product_id', '=', 'products.id')
                 ->where('products.id', '<>', $product->id)
                 ->whereIn('product_with_categories.category_id', $product_categories)
                 ->inRandomOrder()
                 ->select('products.*')
                 ->get();
+               
 
-            return view('user.pages.single-product', compact('product', 'similar_products'));
+            return view('user.pages.single-product', compact('product', 'similar_products','product_categories_details'));
         } else {
             session()->flash('error', 'Page Not Found');
             return back();
