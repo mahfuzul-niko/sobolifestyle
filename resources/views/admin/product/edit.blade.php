@@ -503,7 +503,6 @@
                                                 @if ($product->discount_type == 'percentage') selected class="text-light bg-success" @endif
                                                 value="percentage">Percentage</option>
                                         </select>
-
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label class="col-form-label"><b>Discount Amount</b></label>
@@ -511,6 +510,12 @@
                                             value="{{ $product->discount_amount }}"
                                             class="form-control @error('discount_amount') is-invalid @enderror">
                                     </div>
+                                    <div class="form-group col-md-4">
+                                        <label class="col-form-label"><b>Rating</b></label>
+                                        <input type="text" name="rating" value="{{ $product->rating }}" max="5"
+                                            class="form-control @error('rating') is-invalid @enderror">
+                                    </div>
+
 
                                 </div>
                             </div>

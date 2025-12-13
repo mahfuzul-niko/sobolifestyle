@@ -99,7 +99,7 @@
                                     src="{{ asset('images/website/' . optional($business)->header_logo) }}"
                                     alt="{{ optional($business)->name }}" style="height: 60px; width: auto;"></a></h1>
                     </div> --}}
-                    <div class="logo-anim-wrapper" >
+                    <a href="{{ route('index') }}" class="logo-anim-wrapper" >
 
                         <svg viewBox="1200 70 1500 560" xmlns="http://www.w3.org/2000/svg">
 
@@ -146,7 +146,7 @@
 
                         </svg>
 
-                    </div>
+                    </a>
                     {{-- <div class="">
                         <h3>The Aranis</h3>
                         <p class="fs-6 lh-sm">

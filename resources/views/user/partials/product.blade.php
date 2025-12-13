@@ -38,7 +38,6 @@
         visibility: visible;
         transform: scale(1.05);
     }
-
 </style>
 
 @if (!empty($product))
@@ -60,7 +59,7 @@
 
         if ($product->discount_type != 'no') {
             if ($product->discount_type == 'flat') {
-                $sale_text = '-' . optional($product)->discount_amount . ' TK';
+                $sale_text = '-' . optional($product)->discount_amount . 'TK';
             } elseif ($product->discount_type == 'percentage') {
                 $sale_text = '-' . optional($product)->discount_amount . '%';
             }
@@ -130,6 +129,32 @@
                             class="current__price">৳{{ optional($stock_price)->price > 0 ? number_format(optional($stock_price)->price) : 0.0 }}</span>
                     @endif
                 </div>
+                <div class="product__rating">
+                    @php
+                        $rating = round($product->rating * 2) / 2; // Round to nearest 0.5
+                        $fullStars = floor($rating);
+                        $halfStar = $rating - $fullStars == 0.5 ? true : false;
+                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                    @endphp
+
+                    {{-- Full stars --}}
+                    @for ($i = 0; $i < $fullStars; $i++)
+                        <span style="color: gold; font-weight: bold;">★</span>
+                    @endfor
+
+                    {{-- Half star --}}
+                    @if ($halfStar)
+                        <span style="color: gold; font-weight: bold;">☆</span> {{-- you can use a half-star icon if you have Font Awesome --}}
+                    @endif
+
+                    {{-- Empty stars --}}
+                    @for ($i = 0; $i < $emptyStars; $i++)
+                        <span style="color: gray;">★</span>
+                    @endfor
+
+                    <span style="margin-left:5px;">({{ number_format($product->rating, 1) }})</span>
+                </div>
+
                 <ul class="product__items--action ">
                     <li class="product__items--action__list  gap-2">
                         @if ($product->type == 'single')
@@ -156,7 +181,6 @@
                                 </a>
                             @endif
                         @else
-
                             {{-- Variations Product --}}
                             @if (optional($stock_price)->qty > 0 || $variant_in_stock)
                                 {{-- Select Product --}}

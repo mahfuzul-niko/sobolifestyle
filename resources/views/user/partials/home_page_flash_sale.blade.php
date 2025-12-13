@@ -97,7 +97,7 @@
                 <div class="product__section--inner">
                     <div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 mb--n30">
                         @foreach ($flash_sale_offer->products->take(10) as $item)
-                            @php($product = App\Models\Product::where('id', $item->product_id)->first(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes']))
+                            @php($product = App\Models\Product::where('id', $item->product_id)->first(['id', 'discount_type', 'discount_amount', 'type', 'title', 'thumbnail_image', 'thumbnail_image2', 'colors', 'attributes','rating']))
 
                             @if (!is_null($product))
                                 @include('user.partials.product')

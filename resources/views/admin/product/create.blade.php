@@ -382,7 +382,11 @@
                                             value="{{ old('discount_amount') }}"
                                             class="form-control @error('discount_amount') is-invalid @enderror">
                                     </div>
-
+                                    <div class="form-group col-md-4">
+                                        <label class="col-form-label"><b>Rating</b></label>
+                                        <input type="text" name="rating" value="{{ old('rating') }}" max="5"
+                                            class="form-control @error('rating') is-invalid @enderror">
+                                    </div>
 
                                 </div>
 

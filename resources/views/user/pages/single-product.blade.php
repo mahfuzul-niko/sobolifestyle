@@ -19,8 +19,8 @@
         }
 
         /* .variant__size--value {
-                                                    width: 6rem !important;
-                                                } */
+                                                        width: 6rem !important;
+                                                    } */
         .single-product-bg-info {
             margin-bottom: 5px;
         }
@@ -251,7 +251,8 @@
                                                 href="#">{{ $product->category->title }}</a></span>
                                     </div>
                                 @endif
-                                <div class="mb-3">
+                                <div class="mb-3 flex flex-column gap-1">
+
                                     {{-- Price --}}
                                     @if ($product->type == 'single')
                                         @if ($product->discount_type != 'no')
@@ -488,6 +489,7 @@
                                 @endif
                             </div>
                         </form>
+                        
                     </div>
                     {{-- </form> --}}
                 </div>
