@@ -152,6 +152,18 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
+                                    <label>Note</label>
+                                    <input type="text" name="note" value="{{ optional($setting)->notes }}"
+                                        class="form-control @error('note') is-invalid @enderror">
+                                    @error('note')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
                                     <label>Footer Discription</label>
                                     <input type="text" name="footer_discription"
                                         value="{{ optional($setting)->footer_discription }}"

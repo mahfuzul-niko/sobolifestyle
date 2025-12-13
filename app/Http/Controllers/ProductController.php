@@ -298,6 +298,7 @@ class ProductController extends Controller
         $product->type = 'variation';
         $product->feature = $request->feature;
         $product->description = $request->description;
+        $product->short_description = $request->short_description;
 
         if (!empty($request->code)) {
             $product->code = $request->code;
@@ -498,6 +499,7 @@ class ProductController extends Controller
             $product->type = 'variation';
             $product->feature = $request->feature;
             $product->description = $request->description;
+            $product->short_description = $request->short_description;
 
 
             //Meta info

@@ -203,6 +203,7 @@ class SettingController extends Controller
         $setting->name = $request->name;
         $setting->title = $request->title;
         $setting->sub_title = $request->sub_title;
+        $setting->notes = $request->note;
         $setting->footer_discription = $request->footer_discription;
 
         $setting->logo_color = $request->logo_color;

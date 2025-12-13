@@ -512,8 +512,8 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label class="col-form-label"><b>Rating</b></label>
-                                        <input type="text" name="rating" value="{{ $product->rating }}" max="5"
-                                            class="form-control @error('rating') is-invalid @enderror">
+                                        <input type="text" name="rating" value="{{ $product->rating }}"
+                                            max="5" class="form-control @error('rating') is-invalid @enderror">
                                     </div>
 
 
@@ -521,11 +521,16 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label class="col-form-label"><b>Features</b></label>
+                                <label class="col-form-label"><b>Short Description </b></label>
                                 <div class="">
-                                    <textarea class="form-control @error('feature') is-invalid @enderror" name="feature">{{ $product->feature }}</textarea>
+                                    <input type="text"
+                                        class="form-control @error('short_description') is-invalid @enderror"
+                                        value="{{ $product->short_description }}"
+                                        name="short_description">{{ old('short_description') }}</input>
                                 </div>
                             </div>
+
+
                             <div class="form-group col-md-12">
                                 <label class="col-form-label"><b>Description *</b></label>
                                 <div class="">
@@ -535,6 +540,12 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-form-label"><b>Specification</b></label>
+                                <div class="">
+                                    <textarea class="form-control @error('feature') is-invalid @enderror" name="feature">{{ $product->feature }}</textarea>
                                 </div>
                             </div>
                         </div>

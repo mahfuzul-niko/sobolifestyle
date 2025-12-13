@@ -393,7 +393,19 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label class="col-form-label"><b>Features</b></label>
+                                <label class="col-form-label"><b>Short Description </b></label>
+                                <div class="">
+                                    <input type="text" class="form-control @error('short_description') is-invalid @enderror" name="short_description">{{ old('short_description') }}</input>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-form-label"><b>Description *</b></label>
+                                <div class="">
+                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description">{{ old('description') }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="col-form-label"><b>Specification</b></label>
                                 <div class="">
                                     <textarea class="form-control @error('feature') is-invalid @enderror" name="feature">
 							<table class="table table-bordered " style="border-collapse: collapse; display:none; width: 100%;">
@@ -415,12 +427,7 @@
 						</textarea>
                                 </div>
                             </div>
-                            <div class="form-group col-md-12">
-                                <label class="col-form-label"><b>Description *</b></label>
-                                <div class="">
-                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description">{{ old('description') }}</textarea>
-                                </div>
-                            </div>
+
 
                         </div>
 
