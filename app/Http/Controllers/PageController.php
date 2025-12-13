@@ -301,7 +301,7 @@ class PageController extends Controller
                 }
 
                 $price_info .= '
-        <strong class="price-amount">
+        <strong class="price-amount h3">
             <span class="price-currency">৳</span>' . number_format($final_price, 2) . '
         </strong>
         <span class="price__divided"></span>
@@ -313,7 +313,7 @@ class PageController extends Controller
             } else {
 
                 $price_info .= '
-        <strong class="price-amount">
+        <strong class="price-amount h3">
             <span class="price-currency">৳</span>' . number_format($info->price, 2) . '
         </strong>
     ';

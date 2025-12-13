@@ -278,15 +278,15 @@
                                         <span class="single-product-bg-info"
                                             id="product_price_info{{ optional($product)->id }}">
                                             @if ($min_price == $max_price)
-                                                <strong class="price-amount">
+                                                <strong class="price-amount h3">
                                                     <span class="price-currency ">৳</span>{{ number_format($min_price) }}
                                                 </strong>
                                             @else
-                                                <strong class="price-amount">
+                                                <strong class="price-amount h3">
                                                     <span class="price-currency">৳</span>{{ number_format($min_price) }}
                                                 </strong>
                                                 <span class="price__divided"></span>
-                                                <strong class="price-amount">
+                                                <strong class="price-amount h3">
                                                     <span class="price-currency">৳</span>{{ number_format($max_price) }}
                                                 </strong>
                                             @endif
