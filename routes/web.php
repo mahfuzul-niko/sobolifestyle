@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SslCommerzPaymentController;
 use App\Http\Controllers\WholesaleController;
-
+use Illuminate\Http\Request;
+use App\Services\BdCourierFraudService;
 // Route::get('/', function () {
 //     return view('pages.index');
 // });
@@ -12,9 +13,15 @@ Route::get('/invoice', function () {
 	return view('admin.invoice.generate');
 });
 
-Route::get('/test', function () {
-	return view('user.pages.new-shop');
-});
+
+Route::get('/fraud/chack', function (Request $request) {
+	
+	$phone = $request->phone;
+
+	$fraudResponse = BdCourierFraudService::checkPhone($phone);
+
+	return response()->json($fraudResponse);
+})->name('fraud-check');
 
 
 Route::get('/', [App\Http\Controllers\PageController::class, 'index'])->name('index');
