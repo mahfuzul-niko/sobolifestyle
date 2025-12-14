@@ -265,9 +265,13 @@
 
                         <!-- Fraud Check Button -->
                         <div class="text-end mb-3">
-                            <button id="fraudCheckBtn" class="btn btn-primary" data-phone="{{ $order->phone }}">Fraud
-                                Check</button>
+                            <button id="fraudCheckBtn" class="btn btn-primary" data-phone="{{ $order->phone }}">
+                                <span class="btn-text">Fraud Check</span>
+                                <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"
+                                    aria-hidden="true"></span>
+                            </button>
                         </div>
+
 
                         <!-- ====== STATS CARDS ====== -->
                         <div class="row g-4 mb-4">
@@ -549,48 +553,63 @@
                 e.preventDefault();
 
                 let phone = $(this).data('phone');
+                let $btn = $(this);
+                let $spinner = $btn.find('.spinner-border');
+                let $text = $btn.find('.btn-text');
+
+                // Show spinner, hide text
+                $spinner.removeClass('d-none');
+                $text.text('Checking...');
 
                 $.get("{{ route('fraud-check') }}", {
-                    phone: phone
-                }, function(response) {
-                    if (response.status === "success") {
+                        phone: phone
+                    }, function(response) {
+                        if (response.status === "success") {
 
-                        // Update summary cards
-                        $('#totalOrders').text(response.courierData.summary.total_parcel);
-                        $('#successOrders').text(response.courierData.summary.success_parcel);
-                        $('#cancelOrders').text(response.courierData.summary.cancelled_parcel);
-                        $('#successRate').text(response.courierData.summary.success_ratio + "%");
+                            // Update summary cards
+                            $('#totalOrders').text(response.courierData.summary.total_parcel);
+                            $('#successOrders').text(response.courierData.summary.success_parcel);
+                            $('#cancelOrders').text(response.courierData.summary.cancelled_parcel);
+                            $('#successRate').text(response.courierData.summary.success_ratio + "%");
 
-                        // Clear table body
-                        $('#courierTableBody').empty();
+                            // Clear table body
+                            $('#courierTableBody').empty();
 
-                        // Populate table rows dynamically
-                        $.each(response.courierData, function(key, courier) {
-                            if (key === "summary") return; // skip summary
+                            // Populate table rows dynamically
+                            $.each(response.courierData, function(key, courier) {
+                                if (key === "summary") return; // skip summary
 
-                            let row = `
+                                let row = `
                         <tr>
                             <td class="text-start d-flex align-items-center">
                                 <img src="${courier.logo}" alt="${courier.name} Logo" height="28" class="me-2">
-                               
+                                ${courier.name}
                             </td>
                             <td>${courier.total_parcel}</td>
                             <td class="text-success">${courier.success_parcel}</td>
                             <td class="text-danger">${courier.cancelled_parcel}</td>
                         </tr>
                     `;
-                            $('#courierTableBody').append(row);
-                        });
+                                $('#courierTableBody').append(row);
+                            });
 
-                        // Update footer totals
-                        $('#totalParcel').text(response.courierData.summary.total_parcel);
-                        $('#totalSuccess').text(response.courierData.summary.success_parcel);
-                        $('#totalCancel').text(response.courierData.summary.cancelled_parcel);
+                            // Update footer totals
+                            $('#totalParcel').text(response.courierData.summary.total_parcel);
+                            $('#totalSuccess').text(response.courierData.summary.success_parcel);
+                            $('#totalCancel').text(response.courierData.summary.cancelled_parcel);
 
-                    } else {
-                        alert("Failed to fetch courier data.");
-                    }
-                });
+                        } else {
+                            alert("Failed to fetch courier data.");
+                        }
+                    })
+                    .fail(function() {
+                        alert("An error occurred while fetching data.");
+                    })
+                    .always(function() {
+                        // Hide spinner, restore text
+                        $spinner.addClass('d-none');
+                        $text.text('Fraud Check');
+                    });
             });
         });
     </script>
