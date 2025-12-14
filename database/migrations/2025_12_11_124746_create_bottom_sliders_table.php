@@ -17,6 +17,8 @@ class CreateBottomSlidersTable extends Migration
             $table->id();
             $table->string('image')->nullable();
             $table->string('link')->nullable();
+            $table->string('m_image')->nullable();
+            $table->string('m_link')->nullable();
             $table->timestamps();
         });
     }

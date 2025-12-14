@@ -63,9 +63,37 @@
 </div>
 <!-- End slider section -->
 
-<div class="container-fluid" style="overflow:hidden;">
+<div class="container-fluid" style="overflow:hidden; display:none; margin-top: 15px;" id="desktopSlider">
     <a href="{{ $bottomSlider->link ?? '#' }}">
         <img src="{{ asset('images/slider/' . ($bottomSlider->image ?? 'blank.png')) }}" alt=""
             style="width:100%; height:100%; object-fit:cover; display:block;">
     </a>
 </div>
+
+<div class="container-fluid" style="overflow:hidden; display:block;" id="mobileSlider">
+    <a href="{{ $bottomSlider->m_link ?? '#' }}">
+        <img src="{{ asset('images/slider/' . ($bottomSlider->m_image ?? 'blank.png')) }}" alt=""
+            style="width:100%; height:100%; object-fit:cover; display:block;">
+    </a>
+</div>
+<style>
+    @media (min-width: 768px) {
+        #desktopSlider {
+            display: block !important;
+        }
+
+        #mobileSlider {
+            display: none !important;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        #desktopSlider {
+            display: none !important;
+        }
+
+        #mobileSlider {
+            display: block !important;
+        }
+    }
+</style>

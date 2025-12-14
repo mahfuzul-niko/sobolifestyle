@@ -360,13 +360,13 @@ background-color:#06693B!important;
                                 @if (count($category->menu_child) > 0)
                                     <li class="header__menu--items">
                                         <a class="header__menu--link"
-                                            href="{{ route('products', ['category_id' => $category->id]) }}">
+                                            href="{{ route('products', ['category_id[]' => $category->id]) }}">
                                             {{ $category->title }}
                                         </a>
                                         <ul class="header__sub--menu">
                                             @foreach ($category->menu_child as $p_category)
                                                 <li class="header__sub--menu__items">
-                                                    <a href="{{ route('products', ['category_id' => $p_category->id]) }}"
+                                                    <a href="{{ route('products', ['category_id[]' => $p_category->id]) }}"
                                                         class="header__sub--menu__link">
                                                         {{ $p_category->title }}
                                                     </a>
@@ -377,7 +377,7 @@ background-color:#06693B!important;
                                 @else
                                     <li class="header__menu--items">
                                         <a class="header__menu--link "
-                                            href="{{ route('products', ['category_id' => $category->id]) }}">
+                                            href="{{ route('products', ['category_id[]' => $category->id]) }}">
                                             {{ $category->title }}
                                         </a>
                                     </li>

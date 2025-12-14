@@ -27,11 +27,13 @@
                         @csrf
                         <div class="row">
 
+                            <!-- Desktop Image -->
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label><span class="text-danger">*</span>Slide Images (1177 x 502px)</label>
+                                    <label><span class="text-danger">*</span>Slide Image (1177 x 502px)</label>
                                     <input type="file" name="image"
-                                        class="form-control @error('image') is-invalid @enderror" required>
+                                        class="form-control @error('image') is-invalid @enderror"
+                                        {{ $bottomSlider ? '' : 'required' }}>
                                     @error('image')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -39,11 +41,14 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <!-- Desktop Link -->
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Link</label>
                                     <input type="text" name="link"
-                                        class="form-control @error('link') is-invalid @enderror" required value="{{ $bottomSlider ? $bottomSlider->link : '' }}">
+                                        class="form-control @error('link') is-invalid @enderror"
+                                        value="{{ $bottomSlider ? $bottomSlider->link : '' }}">
                                     @error('link')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -51,6 +56,37 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <!-- Mobile Image -->
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Mobile Slide Image (e.g., 600 x 400px)</label>
+                                    <input type="file" name="m_image"
+                                        class="form-control @error('m_image') is-invalid @enderror">
+                                    @error('m_image')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Mobile Link -->
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Mobile Link</label>
+                                    <input type="text" name="m_link"
+                                        class="form-control @error('m_link') is-invalid @enderror"
+                                        value="{{ $bottomSlider ? $bottomSlider->m_link : '' }}">
+                                    @error('m_link')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
                             <div class="col-md-12">
                                 <div class="form-group text-right">
                                     <button type="submit" class="btn btn-primary">Save</button>
@@ -59,6 +95,7 @@
 
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -79,25 +116,47 @@
                         <thead>
                             <tr>
                                 <th width="5%">S.N</th>
-                                <th width="30%">Image</th>
-                                <th width="30%">link</th>
+                                <th width="25%">Desktop Image</th>
+                                <th width="25%">Mobile Image</th>
+                                <th width="20%">Desktop Link</th>
+                                <th width="20%">Mobile Link</th>
                             </tr>
                         </thead>
                         <tbody>
-
                             @if ($bottomSlider)
                                 <tr>
                                     <td>1</td>
-                                    <td><img class="shadow rounded border p-1"
-                                            src="{{ asset('images/slider/' . $bottomSlider->image) }}" width="100%">
-                                    </td>
-                                    <td>{{ $bottomSlider->link ?? '' }}</td>
 
+                                    <!-- Desktop Image -->
+                                    <td>
+                                        @if ($bottomSlider->image)
+                                            <img class="shadow rounded border p-1"
+                                                src="{{ asset('images/slider/' . $bottomSlider->image) }}" width="100%">
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+
+                                    <!-- Mobile Image -->
+                                    <td>
+                                        @if ($bottomSlider->m_image)
+                                            <img class="shadow rounded border p-1"
+                                                src="{{ asset('images/slider/' . $bottomSlider->m_image) }}" width="100%">
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+
+                                    <!-- Desktop Link -->
+                                    <td>{{ $bottomSlider->link ?? 'N/A' }}</td>
+
+                                    <!-- Mobile Link -->
+                                    <td>{{ $bottomSlider->m_link ?? 'N/A' }}</td>
                                 </tr>
                             @endif
                         </tbody>
-
                     </table>
+
                 </div>
                 <!-- /.card-body -->
             </div>

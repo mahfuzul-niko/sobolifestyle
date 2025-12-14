@@ -222,16 +222,15 @@ class SliderController extends Controller
     {
         // Get the first slider or create one if none exists
         $slider = BottomSlider::firstOrCreate(
-            ['id' => 1], // or remove this line if ID is auto-increment
-            ['link' => $request->link]
+            ['id' => 1] // or remove this if ID is auto-increment
         );
 
-        // Update link always
+        // Update links
         $slider->link = $request->link;
+        $slider->m_link = $request->m_link;
 
-        // Image upload section
+        // Desktop image upload
         if ($request->hasFile('image')) {
-
             // Delete old image
             if ($slider->image && File::exists(public_path('images/slider/' . $slider->image))) {
                 File::delete(public_path('images/slider/' . $slider->image));
@@ -245,10 +244,26 @@ class SliderController extends Controller
             $slider->image = $img;
         }
 
+        // Mobile image upload
+        if ($request->hasFile('m_image')) {
+            // Delete old mobile image
+            if ($slider->m_image && File::exists(public_path('images/slider/' . $slider->m_image))) {
+                File::delete(public_path('images/slider/' . $slider->m_image));
+            }
+
+            $mImage = $request->file('m_image');
+            $mImg = time() . '_m.' . $mImage->getClientOriginalExtension();
+            $mLocation = public_path('images/slider/' . $mImg);
+            Image::make($mImage)->save($mLocation);
+
+            $slider->m_image = $mImg;
+        }
+
         $slider->save();
 
         Alert::toast('Bottom Slider has been updated', 'success');
         return redirect()->route('slider.bottom.index');
     }
+
 
 }

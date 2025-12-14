@@ -132,7 +132,7 @@
         }
 
         function load_more() {
-            $('#load_more').val(1);
+            $('#load_more').val(1resources/views/user/inc/new-shop.blade.php);
             order_ready();
         }
 

@@ -1,14 +1,14 @@
 @extends('user.inc.master')
 
- @php
-        $top = $followImages->where('key', 'top_image')->first();
-        $left = $followImages->where('key', 'left_image')->first();
-        $middle = $followImages->where('key', 'middle_image')->first();
-        $right = $followImages->where('key', 'right_image')->first();
+@php
+    $top = $followImages->where('key', 'top_image')->first();
+    $left = $followImages->where('key', 'left_image')->first();
+    $middle = $followImages->where('key', 'middle_image')->first();
+    $right = $followImages->where('key', 'right_image')->first();
 
-        $fallback = asset('images/blank.png');
-        $business_info = business_info()
-    @endphp
+    $fallback = asset('images/blank.png');
+    $business_info = business_info();
+@endphp
 
 {{-- @php($business_info = business_info()) --}}
 
@@ -128,17 +128,17 @@
         }
 
         /* .product_col {
-                                                        opacity: 0;
-                                                        transform: translateY(50px) scale(0.95);
-                                                        transition: opacity 0.5s ease, transform 0.5s ease;
-                                                        
-                                                    }
+                                                            opacity: 0;
+                                                            transform: translateY(50px) scale(0.95);
+                                                            transition: opacity 0.5s ease, transform 0.5s ease;
+                                                            
+                                                        }
 
-                                                    .product_col.fade-in {
-                                                        opacity: 1;
-                                                        transform: translateY(0) scale(1);
-                                                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-                                                    } */
+                                                        .product_col.fade-in {
+                                                            opacity: 1;
+                                                            transform: translateY(0) scale(1);
+                                                            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                                                        } */
     </style>
     @include('user.partials.slider')
 
@@ -151,7 +151,8 @@
 
                     @foreach ($featured_categories as $category)
                         <div class="swiper-slide text-center p-2">
-                            <a href="{{ route('products', ['category_id' => $category->id]) }}" class="text-decoration-none">
+                            <a href="{{ route('products', ['category_id[]' => $category->id]) }}"
+                                class="text-decoration-none">
                                 <div
                                     class="rounded-circle shadow d-flex align-items-center justify-content-center cat-circle-card">
                                     <img class="rounded-circle cat-image-inside"
@@ -368,7 +369,7 @@
     <div id="featured_products"></div>
 
     <div id="best_selling_productsStop"></div>
-   
+
 
     <section class="product__section section--padding py-5">
         <div class="container-fluid">

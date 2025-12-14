@@ -12,6 +12,11 @@ Route::get('/invoice', function () {
 	return view('admin.invoice.generate');
 });
 
+Route::get('/test', function () {
+	return view('user.pages.new-shop');
+});
+
+
 Route::get('/', [App\Http\Controllers\PageController::class, 'index'])->name('index');
 //Wholesale Controller
 Route::get('/wholesale', [App\Http\Controllers\WholesaleController::class, 'index'])->name('wholesale');
@@ -40,7 +45,7 @@ Route::get('/ajax_flash_sale_offer', [App\Http\Controllers\PageController::class
 Route::get('/flash-sale-offer/{id}/{slug}', [App\Http\Controllers\PageController::class, 'ajax_flash_sale_offer_details'])->name('flash.sale.offer.details');
 
 
-Route::get('/shop', [App\Http\Controllers\PageController::class, 'products'])->name('products');
+Route::get('/shop', [App\Http\Controllers\ShopController::class, 'index'])->name('products');
 Route::post('/shop_products_data', [App\Http\Controllers\PageController::class, 'shop_products_data'])->name('shop.products.data');
 
 Route::get('/shop/{slug}', [App\Http\Controllers\PageController::class, 'shop_products'])->name('products.individual.group');
@@ -450,6 +455,7 @@ Route::group(['prefix' => '/home', 'middleware' => ['auth', 'verified', 'adminAu
 		Route::post('/destroy/{id}', [App\Http\Controllers\BlogController::class, 'destroy'])->name('destroy');
 		Route::post('/update/{id}', [App\Http\Controllers\BlogController::class, 'update'])->name('update');
 	});
+
 
 
 
