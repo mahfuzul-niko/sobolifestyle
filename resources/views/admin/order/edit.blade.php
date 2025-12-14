@@ -572,7 +572,7 @@
                         <tr>
                             <td class="text-start d-flex align-items-center">
                                 <img src="${courier.logo}" alt="${courier.name} Logo" height="28" class="me-2">
-                                ${courier.name}
+                               
                             </td>
                             <td>${courier.total_parcel}</td>
                             <td class="text-success">${courier.success_parcel}</td>
