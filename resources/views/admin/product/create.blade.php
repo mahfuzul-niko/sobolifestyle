@@ -395,7 +395,7 @@
                             <div class="form-group col-md-12">
                                 <label class="col-form-label"><b>Short Description </b></label>
                                 <div class="">
-                                    <input type="text" class="form-control @error('short_description') is-invalid @enderror" name="short_description">{{ old('short_description') }}</input>
+                                    <textarea  class="form-control @error('short_description') is-invalid @enderror" name="short_description">{{ old('short_description') }}</textarea>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
