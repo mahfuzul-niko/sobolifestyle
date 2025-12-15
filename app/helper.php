@@ -5,150 +5,219 @@ use App\Models\Colors;
 use App\Models\Variation;
 use App\Models\ProductStocks;
 use App\Models\Page;
+use App\Models\Setting;
 use Rakibhstu\Banglanumber\NumberToBangla;
 
+/*
+|--------------------------------------------------------------------------
+| Auth Helpers
+|--------------------------------------------------------------------------
+*/
+if (!function_exists('user')) {
+    function user()
+    {
+        if (session()->has('user')) {
+            return session('user');
+        }
+
+        if ($user = auth()->user()) {
+            session(['user' => $user]);
+            return $user;
+        }
+
+        return null;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Order Helpers
+|--------------------------------------------------------------------------
+*/
+if (!function_exists('order_status')) {
+    function order_status($order_status = 'pending')
+    {
+        return match ($order_status) {
+            'pending' => 'primary',
+            'processing' => 'dark',
+            'shipped' => 'warning',
+            'delivered' => 'success',
+            'canceled' => 'danger',
+            default => 'secondary',
+        };
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Image Helpers
+|--------------------------------------------------------------------------
+*/
+if (!function_exists('admin_image')) {
+    function admin_image($image)
+    {
+        return ($image && file_exists(public_path("images/admin/{$image}")))
+            ? asset("images/admin/{$image}")
+            : asset("images/admin.jpg");
+    }
+}
+
+if (!function_exists('brand_image')) {
+    function brand_image($image)
+    {
+        return ($image && file_exists(public_path("images/brand/{$image}")))
+            ? asset("images/brand/{$image}")
+            : asset("images/brand.png");
+    }
+}
+
+if (!function_exists('category_image')) {
+    function category_image($image)
+    {
+        return ($image && file_exists(public_path("images/category/{$image}")))
+            ? asset("images/category/{$image}")
+            : asset("images/category.jpeg");
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Category & Business Helpers
+|--------------------------------------------------------------------------
+*/
 if (!function_exists('featured_categories')) {
     function featured_categories()
     {
-        $categories = Category::where(['is_menu_active' => 1, 'is_active' => 1])->orderBy('menu_position', 'ASC')->limit(8)->get();
-        return $categories;
+        return Category::where([
+            'is_menu_active' => 1,
+            'is_active' => 1
+        ])
+            ->orderBy('menu_position', 'ASC')
+            ->limit(8)
+            ->get();
     }
 }
 
 if (!function_exists('all_cateegories')) {
     function all_cateegories()
     {
-        $all_categories = Category::orderBy('title', 'ASC')->get(['title', 'id']);
-        return $all_categories;
-
+        return Category::orderBy('title')->get(['id', 'title']);
     }
 }
 
 if (!function_exists('business_info')) {
     function business_info()
     {
-        $business = App\Models\Setting::find(1);
-        return $business;
+        return Setting::find(1);
     }
 }
 
+/*
+|--------------------------------------------------------------------------
+| Product / Variation Helpers
+|--------------------------------------------------------------------------
+*/
 if (!function_exists('color_info')) {
     function color_info($id)
     {
-        $info = Colors::find($id);
-        return $info;
+        return Colors::find($id);
     }
 }
 
 if (!function_exists('variation_info')) {
     function variation_info($id)
     {
-        $info = Variation::find($id);
-        return $info;
+        return Variation::find($id);
     }
 }
 
 if (!function_exists('single_variation_info')) {
     function single_variation_info($variant_id, $product_id)
     {
-        $info = ProductStocks::where('variant', $variant_id)->where('product_id', $product_id)->where('is_active', 1)->get(['id', 'variant', 'variant_output']);
-        return $info;
+        return ProductStocks::where([
+            'variant' => $variant_id,
+            'product_id' => $product_id,
+            'is_active' => 1
+        ])
+            ->get(['id', 'variant', 'variant_output']);
     }
 }
 
 if (!function_exists('variation_stock_info')) {
     function variation_stock_info($id)
     {
-        $info = ProductStocks::find($id);
-        return $info;
+        return ProductStocks::find($id);
     }
 }
 
+/*
+|--------------------------------------------------------------------------
+| Page Helpers
+|--------------------------------------------------------------------------
+*/
 if (!function_exists('other_pages')) {
     function other_pages()
     {
-        $info = Page::get(['id', 'name']);
-        return $info;
+        return Page::whereNotIn('id', [9, 10])->get(['id', 'name']);
     }
 }
 
+/*
+|--------------------------------------------------------------------------
+| Bangla Number & Currency Helpers
+|--------------------------------------------------------------------------
+*/
 if (!function_exists('bnConv')) {
     function bnConv($type = 'bnNum', $number = 0)
     {
-        // If the locale is Bangla, you can still format numbers with commas
-        if (session()->get('locale') == 'bn') {
-            switch ($type) {
-                case 'bnNum':
-                case 'bnComNum': // you can treat comma formatting same way
-                    // Format with commas (1,234,567)
-                    return number_format($number);
-                case 'bnMoney':
-                    // Add currency symbol
-                    return '৳' . number_format($number, 2);
-                case 'bnMonth':
-                case 'bnWord':
-                    // For month or word, just return as-is (or translate later if needed)
-                    return $number;
-                default:
-                    return $number;
-            }
+        $numto = new NumberToBangla();
+
+        if (session('locale') === 'bn') {
+            return match ($type) {
+                'bnNum' => $numto->bnNum($number),
+                'bnWord' => $numto->bnWord($number),
+                'bnMoney' => '৳' . number_format($number, 2),
+                default => $number,
+            };
         }
 
-        // If locale is not Bangla, return normal number
         return $number;
-    }
-}
-
-if (!function_exists('__translate')) {
-    function __translate($en, $bn)
-    {
-        if (session()->get('locale') == 'bn') {
-            return $bn ?? $en;
-        } else {
-            return $en;
-        }
     }
 }
 
 if (!function_exists('__currency')) {
     function __currency()
     {
-        if (session()->get('locale') == 'bn') {
-            return '৳' ?? 'Tk';
-        } else {
-            return 'Tk';
-        }
+        return session('locale') === 'bn' ? '৳' : 'Tk';
     }
 }
+
+if (!function_exists('__translate')) {
+    function __translate($en, $bn = null)
+    {
+        return session('locale') === 'bn' ? ($bn ?? $en) : $en;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Utility Helpers
+|--------------------------------------------------------------------------
+*/
 if (!function_exists('humanReadableFilesize')) {
-    /**
-     * Format file size to human-readable format.
-     *
-     * @param int $bytes
-     * @param int $decimals
-     * @return string
-     */
     function humanReadableFilesize($bytes, $decimals = 2)
     {
-        $size = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        $sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
         $factor = floor((strlen($bytes) - 1) / 3);
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $sizes[$factor];
     }
 }
 
 if (!function_exists('get_youtube_video_id')) {
-    function get_youtube_video_id($url, $key)
+    function get_youtube_video_id($url, $key = 'v')
     {
-        $query_str = parse_url($url, PHP_URL_QUERY);
-        parse_str($query_str, $query_params);
-
-        return $query_params[$key] ?? '';
+        parse_str(parse_url($url, PHP_URL_QUERY), $query);
+        return $query[$key] ?? null;
     }
 }
-
-
-
-
-
-
-
