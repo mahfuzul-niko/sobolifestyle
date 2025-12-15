@@ -36,6 +36,36 @@
             background-color: var(--secondary-color);
             color: var(--white-color);
         }
+
+        /* TinyMCE / CMS Content Styling */
+        .content-area ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+
+        .content-area ul li {
+            list-style: disc;
+        }
+
+        .content-area table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .content-area table th,
+        .content-area table td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .content-area table th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
     </style>
 
     @php
@@ -319,7 +349,11 @@
                                     <span class="single-product-bg-info">Status: {{ $stock_qty_text }}</span>
                                     {{-- Producr Code --}}
                                     <span class="single-product-bg-info">Product Code: {{ $product->code }}</span>
-                                    <span class="fs-3">{!! $product->short_description !!}</span>
+                                    <span class="fs-3">
+                                        <div class="content-area">
+                                            {!! $product->short_description !!}
+                                        </div>
+                                    </span>
 
                                 </div>
                             </div>
@@ -620,12 +654,17 @@
                         <div class="tab_content">
                             <div id="Specification" class="tab_pane active show">
                                 <div class="product__tab--content">
-                                    {!! optional($product)->feature !!}
+                                    <div class="content-area">
+                                        {!! optional($product)->feature !!}
+                                    </div>
                                 </div>
                             </div>
                             <div id="description" class="tab_pane">
                                 <div class="product__tab--content">
-                                    {!! optional($product)->description !!}
+                                    <div class="content-area">
+                                       {!! optional($product)->description !!}
+                                    </div>
+                                    
                                 </div>
                             </div>
 
