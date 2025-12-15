@@ -319,7 +319,8 @@
                                     <span class="single-product-bg-info">Status: {{ $stock_qty_text }}</span>
                                     {{-- Producr Code --}}
                                     <span class="single-product-bg-info">Product Code: {{ $product->code }}</span>
-                                    <span class="lh-1 fs-3">{{ $product->short_description }}</span>
+                                    <span class="fs-3">{!! $product->short_description !!}</span>
+
                                 </div>
                             </div>
                         </div>
