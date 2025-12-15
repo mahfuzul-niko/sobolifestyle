@@ -88,6 +88,7 @@ Route::post('/add-to-cart', [App\Http\Controllers\CartController::class, 'add_ca
 Route::post('/update-cart', [App\Http\Controllers\CartController::class, 'update_cart'])->name('cart.update');
 Route::post('/remove-from-cart', [App\Http\Controllers\CartController::class, 'remove_cart'])->name('cart.remove');
 Route::get('/checkout', [App\Http\Controllers\CartController::class, 'checkout'])->name('checkout');
+Route::post('/autoSave', [App\Http\Controllers\CartController::class, 'autoSave'])->name('autoSave');
 
 // Wishlist
 Route::post('/add-to-wishlist', [App\Http\Controllers\WishlistController::class, 'add_wishlist'])->name('wishlist.add');
@@ -295,6 +296,9 @@ Route::group(['prefix' => '/home', 'middleware' => ['auth', 'verified', 'adminAu
 	// Order Routes
 	Route::group(['prefix' => 'order', 'as' => 'order.'], function () {
 		Route::get('/', [App\Http\Controllers\OrderController::class, 'index'])->name('index');
+		Route::get('/draft', [App\Http\Controllers\OrderController::class, 'draft'])->name('draft');
+		Route::get('/draft/products/{id}', [App\Http\Controllers\OrderController::class, 'draft_products'])->name('draft.products');
+		Route::post('/draft/destroy/{id}', [App\Http\Controllers\OrderController::class, 'draft_destroy'])->name('draft.destroy');
 		Route::get('/status/{id}', [App\Http\Controllers\OrderController::class, 'orders_by_status'])->name('status.filter');
 		//Route::get('/create', [App\Http\Controllers\OrderController::class, 'create'])->name('create');
 		Route::post('/store', [App\Http\Controllers\OrderController::class, 'store'])->name('store');

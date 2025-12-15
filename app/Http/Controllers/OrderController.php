@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DraftOrder;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -33,7 +34,7 @@ class OrderController extends Controller
 
     public function index()
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             $orders = Order::orderBy('id', 'DESC')->get();
             return view('admin.order.index', compact('orders'));
         } else {
@@ -41,9 +42,31 @@ class OrderController extends Controller
         }
     }
 
+    public function draft()
+    {
+        if (Auth::user()->type == 1) {
+            $orders = DraftOrder::orderBy('id', 'DESC')->get();
+            return view('admin.order.draft', compact('orders'));
+        } else {
+            //Alert::toast('Access Denied !', 'error');
+            return back()->with('error', 'Access Denied !');
+        }
+    }
+
+    public function draft_products($id)
+    {
+        if (Auth::user()->type == 1) {
+            $order = DraftOrder::find($id);
+            return view('admin.order.draft_products', compact('order'));
+        } else {
+            //Alert::toast('Access Denied !', 'error');
+            return back()->with('error', 'Access Denied !');
+        }
+    }
+
     public function current_year()
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             $orders = Order::whereYear('created_at', Carbon::now()->year)->get();
             return view('admin.order.current-year', compact('orders'));
         } else {
@@ -53,7 +76,7 @@ class OrderController extends Controller
 
     public function current_month()
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             $orders = Order::whereYear('created_at', Carbon::now()->year)->get();
             return view('admin.order.current-month', compact('orders'));
         } else {
@@ -63,7 +86,7 @@ class OrderController extends Controller
 
     public function today()
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             $orders = Order::whereDate('created_at', Carbon::today())->get();
             return view('admin.order.current-month', compact('orders'));
         } else {
@@ -73,7 +96,7 @@ class OrderController extends Controller
 
     public function search(Request $request)
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             if (!empty($request->order_status_id) && !empty($request->date_from) && !empty($request->date_to)) {
                 $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $request->date_from . ' 00:00:00');
                 $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $request->date_to . ' 23:59:59');
@@ -155,7 +178,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             $order = Order::find($id);
             return view('admin.order.edit', compact('order'));
         } else {
@@ -184,7 +207,7 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             $order = Order::find($id);
             if (!is_null($order)) {
                 foreach ($order->order_product as $product) {
@@ -237,7 +260,7 @@ class OrderController extends Controller
 
     public function change_payment_status(Request $request, $id)
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             $order = Order::find($id);
             if (!is_null($order)) {
                 $order->payment_status = $request->payment_status;
@@ -271,7 +294,7 @@ class OrderController extends Controller
 
     public function orders_by_status($id)
     {
-          if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 6])) {
             $orders = Order::where('order_status', $id)->orderBy('id', 'DESC')->get();
             return view('admin.order.index', compact('orders'));
         } else {

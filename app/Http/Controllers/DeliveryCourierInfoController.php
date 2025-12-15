@@ -111,17 +111,13 @@ class DeliveryCourierInfoController extends Controller
         foreach($areaList->data as $area) {
             $output .= $this->optionMaker($area->area_id, $area->area_name);
         }
-
         return Response($output);
     }
-
     public function getPathaoToken() {
         $pathaoClientID = env('PATHAO_CLIENT_ID');
         $pathaoClientSecret = env('PATHAO_CLIENT_SECRET');
-
         $curl = curl_init();
     }
-
     public function sendPathaoCourierData(Request $request) {
 
         $response = PathaoCourier::order()->create([

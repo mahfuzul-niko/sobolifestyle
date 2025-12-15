@@ -1,5 +1,5 @@
 <?php
-$user = user();
+$user = auth()->user();
 ?>
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -281,6 +281,12 @@ $user = user();
                                     </a>
                                 </li>
                             @endforeach
+                            <li class="nav-item">
+                                <a href="{{ route('order.draft') }}" class="nav-link">
+                                    <i class="fas fa-angle-right"></i>
+                                    <p>Draft </p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif
