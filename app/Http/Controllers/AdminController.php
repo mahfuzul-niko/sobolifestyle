@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Image;
-Use File;
+use File;
 use Alert;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\AboutUs;
@@ -23,11 +23,12 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
-     public function custom_registration(Request $request) {
+
+    public function custom_registration(Request $request)
+    {
 
         session(['register_type' => $request->register_type]);
-        if($request->register_type == 'phone') {
+        if ($request->register_type == 'phone') {
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
@@ -36,8 +37,7 @@ class AdminController extends Controller
                 'address' => ['nullable'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
-        }
-        else if($request->register_type == 'email') {
+        } else if ($request->register_type == 'email') {
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -50,14 +50,14 @@ class AdminController extends Controller
 
         $user = new User;
         $user->name = $request->name;
-        $user->email = $request->email??$request->phone.'@gmail.com';
+        $user->email = $request->email ?? $request->phone . '@gmail.com';
         $user->phone = $request->phone;
         $user->type = 2; // type 2 is customer
         $user->password = Hash::make($request->password);
         $user->save();
 
-        $point_check = DB::table('registration_points')->where(['is_active'=>1])->where('valid_from', '<=', date('Y-m-d'))->where('valid_to', '>=', date('Y-m-d'))->first(['point']);
-        if(!is_null($point_check)) {
+        $point_check = DB::table('registration_points')->where(['is_active' => 1])->where('valid_from', '<=', date('Y-m-d'))->where('valid_to', '>=', date('Y-m-d'))->first(['point']);
+        if (!is_null($point_check)) {
             $user->wallet_point += ($point_check->point + 0);
             $user->save();
             $wallet_transactions = new WalletTransactions;
@@ -73,9 +73,10 @@ class AdminController extends Controller
         //return $this->check_auth_varification($user);
         Auth::login($user);
         return Redirect()->route('home')->with('success', 'Successfully Login.');
-     }
+    }
 
-     public function custom_login(Request $request) {
+    public function custom_login(Request $request)
+    {
 
         $request->validate([
             'userName' => 'required',
@@ -84,48 +85,45 @@ class AdminController extends Controller
 
         $userName = $request->userName;
         $user = User::where('phone', $userName)->orWhere('email', $userName)->first();
-        if(!is_null($user)) {
+        if (!is_null($user)) {
             if (Hash::check($request->password, $user->password)) {
                 //return $this->check_auth_varification($user);
                 Auth::login($user);
                 return Redirect()->route('home')->with('success', 'Successfully Login.');
-            }
-            else {
+            } else {
                 return Redirect()->back()->with('error', 'Invalid Password!');
             }
-        }
-        else {
+        } else {
             return Redirect()->back()->with('error', 'No User Found!');
         }
-     }
+    }
 
 
-     public function check_auth_varification($data) {
+    public function check_auth_varification($data)
+    {
 
-        if($data->phone <> null){
-            if($data->is_phone_verified == 1) {
+        if ($data->phone <> null) {
+            if ($data->is_phone_verified == 1) {
                 Auth::login($data);
-            }
-            else {
+            } else {
                 $this->send_otp($data);
                 session(['user_id' => $data->id]);
                 return Redirect()->route('auth.phone.verify');
             }
-        }
-        else if($data->email <> null) {
+        } else if ($data->email <> null) {
             Auth::login($data);
         }
 
-        if($data->type == 1 || $data->type == 3) {
+        if ($data->type == 1 || $data->type == 3) {
             return Redirect()->route('home')->with('success', 'Successfully Login.');
-        }
-        else {
+        } else {
             return Redirect()->route('customer.account')->with('success', 'Successfully Login.');
         }
 
-     }
+    }
 
-     public function send_otp($data) {
+    public function send_otp($data)
+    {
 
         $number = $data->phone;
         $otp = rand(100000, 999999);
@@ -135,57 +133,56 @@ class AdminController extends Controller
 
         $msg = "Dear Customer, Your OTP for login Paws And Beyond is '.$otp.'. Thank you!";
         User::send_sms($number, $msg);
-     }
+    }
 
-     public function auth_phone_verify() {
+    public function auth_phone_verify()
+    {
         $user_id = session('user_id');
         $user = User::find($user_id);
-        if(!is_null($user)) {
+        if (!is_null($user)) {
             return view('auth.phone_verify', compact('user_id'));
         }
-     }
+    }
 
-     public function verify_user_phone(Request $request) {
+    public function verify_user_phone(Request $request)
+    {
         $user_id = $request->custom_token;
         $user = User::find($user_id);
-        if(!empty($user)) {
-            if($request->code == $user->verification_code) {
+        if (!empty($user)) {
+            if ($request->code == $user->verification_code) {
                 $user->is_phone_verified = 1;
                 $user->save();
                 Auth::login($user);
 
-                if($user->type == 1 || $user->type == 3) {
+                if ($user->type == 1 || $user->type == 3) {
                     return Redirect()->route('home')->with('success', 'Successfully Login.');
-                }
-                else {
+                } else {
                     return Redirect()->route('customer.account')->with('success', 'Successfully Login.');
                 }
-            }
-            else {
+            } else {
                 return Redirect()->back()->with('error', 'Wrong OTP!');
             }
-        }
-        else {
+        } else {
             return Redirect()->back()->with('error', 'No User Found!');
         }
-     }
+    }
 
-     public function resend_verification_code(Request $request) {
+    public function resend_verification_code(Request $request)
+    {
         $user_id = $request->custom_token;
         $user = User::find($user_id);
         $this->send_otp($user);
         return 'success';
-     }
+    }
 
 
-     public function index()
+    public function index()
     {
         if (Auth::user()->type == 1) {
             $admins = User::where('type', 1)->orderBy('id', 'DESC')->get();
             return view('admin.admin.index', compact('admins'));
-        }
-        else {
-            session()->flash('error','Access Denied !');
+        } else {
+            session()->flash('error', 'Access Denied !');
             return back();
         }
     }
@@ -199,9 +196,8 @@ class AdminController extends Controller
     {
         if (Auth::user()->type == 1) {
             return view('admin.admin.create');
-        }
-        else {
-            session()->flash('error','Access Denied !');
+        } else {
+            session()->flash('error', 'Access Denied !');
             return back();
         }
     }
@@ -223,17 +219,17 @@ class AdminController extends Controller
         $admin = new User;
         $admin->name = $request->name;
         $admin->last_name = $request->last_name;
-        $admin->email = $request->email??$request->phone.'@gmail.com';
+        $admin->email = $request->email ?? $request->phone . '@gmail.com';
         $admin->phone = $request->phone;
         //$admin->description = $request->description;
         $admin->city = $request->city;
         //$admin->country = $request->country;
         $admin->password = Hash::make($request->password);
         // image save
-        if ($request->image){
+        if ($request->image) {
             $image = $request->file('image');
             $img = time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('images/admin/'. $img);
+            $location = public_path('images/admin/' . $img);
             Image::make($image)->save($location);
             $admin->image = $img;
         }
@@ -254,7 +250,7 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        
+
     }
 
     /**
@@ -269,14 +265,12 @@ class AdminController extends Controller
             $admin = User::find($id);
             if (!is_null($admin)) {
                 return view('admin.admin.edit', compact('admin'));
-            }
-            else{
-                session()->flash('error','Something went wrong !');
+            } else {
+                session()->flash('error', 'Something went wrong !');
                 return back();
             }
-        }
-        else {
-            session()->flash('error','Access Denied !');
+        } else {
+            session()->flash('error', 'Access Denied !');
             return back();
         }
     }
@@ -293,31 +287,31 @@ class AdminController extends Controller
         $admin = User::find($id);
         $request->validate([
             'name' => 'required|max:255',
-            'email' => 'nullable|max:255|unique:users,email,'.$admin->id,
-            'phone' => 'required|max:255|unique:users,phone,'.$admin->id,
+            'email' => 'nullable|max:255|unique:users,email,' . $admin->id,
+            'phone' => 'required|max:255|unique:users,phone,' . $admin->id,
             'image' => 'nullable|image',
         ]);
         $admin->name = $request->name;
         $admin->last_name = $request->last_name;
-        $admin->email = $request->email??$request->phone.'@gmail.com';
+        $admin->email = $request->email ?? $request->phone . '@gmail.com';
         $admin->phone = $request->phone;
         // $admin->description = $request->description;
         $admin->city = $request->city;
         // $admin->country = $request->country;
-        
+
         // image save
-        if ($request->image){
-            if (File::exists('images/admin/'.$admin->image)){
-                File::delete('images/admin/'.$admin->image);
+        if ($request->image) {
+            if (File::exists('images/admin/' . $admin->image)) {
+                File::delete('images/admin/' . $admin->image);
             }
             $image = $request->file('image');
             $img = time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('images/admin/'. $img);
+            $location = public_path('images/admin/' . $img);
             Image::make($image)->save($location);
             $admin->image = $img;
         }
 
-        
+
 
         $admin->save();
 
@@ -335,16 +329,15 @@ class AdminController extends Controller
     {
         $admin = User::find($id);
         if (!is_null($admin)) {
-            if (File::exists('images/admin/'.$admin->image)){
-                File::delete('images/admin/'.$admin->image);
+            if (File::exists('images/admin/' . $admin->image)) {
+                File::delete('images/admin/' . $admin->image);
             }
             $admin->delete();
             Alert::toast('Admin has been deleted !', 'success');
-            return redirect()->route('admin.index');
-        }
-        else {
-            session()->flash('error','Something went wrong !');
-            return redirect()->route('admin.index');
+            return redirect()->back();
+        } else {
+            session()->flash('error', 'Something went wrong !');
+            return redirect()->back();
         }
     }
 
@@ -353,9 +346,8 @@ class AdminController extends Controller
         if (Auth::user()->type == 1) {
             $customers = User::where('type', 2)->orderBy('id', 'DESC')->get();
             return view('admin.customer.index', compact('customers'));
-        }
-        else {
-            session()->flash('error','Access Denied !');
+        } else {
+            session()->flash('error', 'Access Denied !');
             return back();
         }
     }
@@ -364,29 +356,30 @@ class AdminController extends Controller
     {
         $customer = User::find($id);
         if (!is_null($customer)) {
-            if (File::exists('images/customer/'.$customer->image)){
-                File::delete('images/customer/'.$customer->image);
+            if (File::exists('images/customer/' . $customer->image)) {
+                File::delete('images/customer/' . $customer->image);
             }
             $customer->delete();
             Alert::toast('Customer has been deleted !', 'success');
             return redirect()->route('customer.index');
-        }
-        else {
-            session()->flash('error','Something went wrong !');
+        } else {
+            session()->flash('error', 'Something went wrong !');
             return redirect()->route('customer.index');
         }
     }
 
-    public function about_us_setting_index() {
+    public function about_us_setting_index()
+    {
         $info = AboutUs::first();
         return view('admin.about-us.index', compact('info'));
     }
 
-    public function about_us_setting_store(Request $request) {
+    public function about_us_setting_store(Request $request)
+    {
 
         $setting = AboutUs::first();
 
-        if(is_null($setting)) {
+        if (is_null($setting)) {
             $setting = new AboutUs;
         }
 
@@ -397,13 +390,13 @@ class AdminController extends Controller
         $setting->custom_block_details = $request->custom_block_details;
 
         // Image save
-        if ($request->image){
-            if (File::exists('images/website/'.$setting->image)){
-                File::delete('images/website/'.$setting->image);
+        if ($request->image) {
+            if (File::exists('images/website/' . $setting->image)) {
+                File::delete('images/website/' . $setting->image);
             }
             $image = $request->file('image');
-            $img = time().rand().'.' . $image->getClientOriginalExtension();
-            $location = public_path('images/website/'. $img);
+            $img = time() . rand() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/website/' . $img);
             Image::make($image)->save($location);
             $setting->image = $img;
         }
@@ -415,19 +408,19 @@ class AdminController extends Controller
 
     }
 
-    public function forgot_password_send_otp(Request $request) {
+    public function forgot_password_send_otp(Request $request)
+    {
         $output = '';
         $phone = $request->phone;
         $user_info = User::where('phone', $phone)->first();
-        
-        if(is_null($user_info)) {
+
+        if (is_null($user_info)) {
             $output = [
                 'status' => 'no',
                 'reason' => 'Invalid Phone Number.',
             ];
             return Response($output);
-        }
-        else {
+        } else {
             $this->send_otp($user_info);
             $new_user_info = User::find($user_info->id);
             $output = [
@@ -440,11 +433,12 @@ class AdminController extends Controller
         }
     }
 
-    public function password_reset_confirm(Request $request) {
+    public function password_reset_confirm(Request $request)
+    {
         $user_id = $request->user_id;
         $password = $request->password;
         $confirm_password = $request->confirm_password;
-        if($password <> $confirm_password) {
+        if ($password <> $confirm_password) {
             $output = [
                 'status' => 'no',
                 'reason' => 'Password Not Mached.',
@@ -457,7 +451,7 @@ class AdminController extends Controller
         $user->save();
 
         Auth::login($user);
-        
+
         $output = [
             'status' => 'yes',
             'reason' => 'New Password Set Successfully.',
@@ -465,6 +459,137 @@ class AdminController extends Controller
 
         return Response($output);
     }
+    public function CRM()
+    {
+        if (Auth::user()->type == 1) {
+            $admins = User::whereIN('type', [4, 5, 6])->orderBy('id', 'DESC')->get();
+            return view('admin.admin.crm', compact('admins'));
+        } else {
+            session()->flash('error', 'Access Denied !');
+            return back();
+        }
+    }
+    public function createCRM()
+    {
+        if (Auth::user()->type == 1) {
+            return view('admin.admin.create-crm');
+        } else {
+            session()->flash('error', 'Access Denied !');
+            return back();
+        }
+    }
+    public function storeCrm(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'nullable|max:255|unique:users',
+            'phone' => 'required|max:255|unique:users',
+            'image' => 'nullable|image',
+        ]);
+        $admin = new User;
+        $admin->name = $request->name;
+        $admin->last_name = $request->last_name;
+        $admin->email = $request->email ?? $request->phone . '@gmail.com';
+        $admin->phone = $request->phone;
+
+        $admin->city = $request->city;
+
+        $admin->password = Hash::make($request->password);
+
+        if ($request->image) {
+            $image = $request->file('image');
+            $img = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/admin/' . $img);
+            Image::make($image)->save($location);
+            $admin->image = $img;
+        }
+        $admin->type = $request->type;
+        $admin->is_active = 1;
+        $admin->save();
+        Alert::toast('One CRM added !', 'success');
+        return redirect()->route('admin.crm');
+    }
+    public function editCrm($id)
+    {
+        if (Auth::user()->type == 1) {
+            $admin = User::find($id);
+            if (!is_null($admin)) {
+                return view('admin.admin.edit-crm', compact('admin'));
+            } else {
+                session()->flash('error', 'Something went wrong !');
+                return back();
+            }
+        } else {
+            session()->flash('error', 'Access Denied !');
+            return back();
+        }
+    }
+    public function updateCRM(Request $request, $id)
+    {
+        if (Auth::user()->type != 1) {
+            session()->flash('error', 'Access Denied !');
+            return back();
+        }
+
+        $admin = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'nullable|max:255|unique:users,email,' . $admin->id,
+            'phone' => 'required|max:255|unique:users,phone,' . $admin->id,
+            'image' => 'nullable|image',
+        ]);
+
+        $admin->name = $request->name;
+        $admin->last_name = $request->last_name;
+        $admin->email = $request->email ?? $request->phone . '@gmail.com';
+        $admin->phone = $request->phone;
+        $admin->city = $request->city;
+        $admin->type = $request->type;
+
+        if ($request->password) {
+            $admin->password = Hash::make($request->password);
+        }
+
+        if ($request->image) {
+            if ($admin->image && file_exists(public_path('images/admin/' . $admin->image))) {
+                unlink(public_path('images/admin/' . $admin->image));
+            }
+
+            $image = $request->file('image');
+            $img = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/admin/' . $img);
+            Image::make($image)->save($location);
+            $admin->image = $img;
+        }
+
+        $admin->save();
+
+        Alert::toast('CRM updated successfully!', 'success');
+        return redirect()->route('admin.crm');
+    }
+    public function deleteCRM($id)
+    {
+        if (Auth::user()->type != 1) {
+            session()->flash('error', 'Access Denied !');
+            return back();
+        }
+
+        $admin = User::findOrFail($id);
+
+        if ($admin->image && file_exists(public_path('images/admin/' . $admin->image))) {
+            unlink(public_path('images/admin/' . $admin->image));
+        }
+
+        $admin->delete();
+
+        Alert::toast('CRM deleted successfully!', 'success');
+        return back();
+    }
+
+
+
+
 
 
 }

@@ -20,6 +20,18 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+        $this->middleware(function ($request, $next) {
+            if (!in_array(auth()->user()->type, [1, 4, 5])) {
+                abort(403);
+            }
+            return $next($request);
+        });
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +39,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->type == 1) {
+          if (in_array(Auth::user()->type, [1, 3, 4, 5])) {
             $products = Product::orderBy('id', 'DESC')->get();
             return view('admin.product.index', compact('products'));
         } else {
@@ -44,7 +56,7 @@ class ProductController extends Controller
     public function create()
     {
 
-        if (Auth::user()->type == 1) {
+          if (in_array(Auth::user()->type, [1, 3, 4, 5])) {
             $categories = Category::orderBy('id', 'DESC')->get();
             $brands = Brand::orderBy('id', 'DESC')->get();
             $colors = Colors::orderBy('name', 'ASC')->get();
@@ -446,7 +458,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        if (Auth::user()->type == 1) {
+          if (in_array(Auth::user()->type, [1, 3, 4, 5])) {
             $product = Product::find($id);
             if (!is_null($product)) {
                 $categories = Category::orderBy('id', 'DESC')->get();
@@ -780,7 +792,7 @@ class ProductController extends Controller
     public function color_index()
     {
 
-        if (Auth::user()->type == 1) {
+          if (in_array(Auth::user()->type, [1, 3, 4, 5])) {
             $colors = Colors::orderBy('name', 'ASC')->get();
             return view('admin.color.index', compact('colors'));
         } else {
@@ -817,7 +829,7 @@ class ProductController extends Controller
 
     public function color_edit($id)
     {
-        if (Auth::user()->type == 1) {
+          if (in_array(Auth::user()->type, [1, 3, 4, 5])) {
             $color = Colors::find($id);
             if (!is_null($color)) {
                 return view('admin.color.edit', compact('color'));
@@ -852,7 +864,7 @@ class ProductController extends Controller
 
     public function product_stock()
     {
-        if (Auth::user()->type == 1) {
+          if (in_array(Auth::user()->type, [1, 3, 4, 5])) {
             $stock_info = ProductStocks::all();
             return view('admin.product.product_stock', compact('stock_info'));
         } else {
@@ -863,7 +875,7 @@ class ProductController extends Controller
 
     public function stock_qty_update(Request $request)
     {
-        if (Auth::user()->type == 1) {
+          if (in_array(Auth::user()->type, [1, 3, 4, 5])) {
             $stock_id = $request->stock_id;
             $stock_info = ProductStocks::find($stock_id);
             if (is_null($stock_info)) {

@@ -21,8 +21,7 @@ class GalleryController extends Controller
         if (Auth::user()->type == 1) {
             $galleries = Gallery::orderBy('id', 'DESC')->get();
             return view('admin.gallery.index', compact('galleries'));
-        }
-        else{
+        } else {
             Alert::toast('Access Denied !', 'error');
         }
     }
@@ -45,11 +44,11 @@ class GalleryController extends Controller
      */
     public function store(Request $request)
     {
-        if (count($request->image) > 0){
+        if (count($request->image) > 0) {
             $i = 0;
-            foreach ($request->image as $image){
+            foreach ($request->image as $image) {
                 $img = time() . $i . '.' . $image->getClientOriginalExtension();
-                $location = public_path('images/gallery/'. $img);
+                $location = public_path('images/gallery/' . $img);
                 Image::make($image)->resize(1000, 800)->save($location);
 
                 $gallery = new Gallery;
@@ -107,19 +106,17 @@ class GalleryController extends Controller
         if (Auth::user()->type == 1) {
             $gallery = Gallery::find($id);
             if (!is_null($gallery)) {
-                if (File::exists('images/gallery/'.$gallery->image)){
-                    File::delete('images/gallery/'.$gallery->image);
+                if (File::exists('images/gallery/' . $gallery->image)) {
+                    File::delete('images/gallery/' . $gallery->image);
                 }
                 $gallery->delete();
                 Alert::toast('Gallery image has been deleted', 'success');
                 return redirect()->route('gallery.index');
-            }
-            else {
+            } else {
                 Alert::toast('Something went wrong!', 'error');
                 return back();
             }
-        }
-        else {
+        } else {
             Alert::toast('Something went wrong!', 'error');
             return back();
         }

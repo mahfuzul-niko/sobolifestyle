@@ -15,7 +15,7 @@ Route::get('/invoice', function () {
 
 
 Route::get('/fraud/chack', function (Request $request) {
-	
+
 	$phone = $request->phone;
 
 	$fraudResponse = BdCourierFraudService::checkPhone($phone);
@@ -200,6 +200,13 @@ Route::group(['prefix' => '/home', 'middleware' => ['auth', 'verified', 'adminAu
 		Route::get('/edit/{id}', [App\Http\Controllers\AdminController::class, 'edit'])->name('edit');
 		Route::post('/update/{id}', [App\Http\Controllers\AdminController::class, 'update'])->name('update');
 		Route::post('/destroy/{id}', [App\Http\Controllers\AdminController::class, 'destroy'])->name('destroy');
+
+		Route::get('/crm', [App\Http\Controllers\AdminController::class, 'CRM'])->name('crm');
+		Route::get('/create/crm', [App\Http\Controllers\AdminController::class, 'createCrm'])->name('create.crm');
+		Route::post('/store/crm', [App\Http\Controllers\AdminController::class, 'storeCrm'])->name('store.crm');
+		Route::get('/edit/crm/{id}', [App\Http\Controllers\AdminController::class, 'editCrm'])->name('edit.crm');
+		Route::post('/update/crm/{id}', [App\Http\Controllers\AdminController::class, 'updateCrm'])->name('update.crm');
+		Route::post('/destroy/crm/{id}', [App\Http\Controllers\AdminController::class, 'destroyCrm'])->name('destroy.crm');
 	});
 
 	// About us setting Routes

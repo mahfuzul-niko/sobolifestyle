@@ -7,10 +7,10 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-6">
-                            <h3 class="m-0 fw-bold">Administrator List</h3>
+                            <h3 class="m-0 fw-bold">CRM List</h3>
                         </div>
                         <div class="col-md-6 text-right">
-                            <a href="{{ route('admin.create') }}" class="btn btn-primary">Add New Admin</a>
+                            <a href="{{ route('admin.create.crm') }}" class="btn btn-primary">Add New CRM</a>
                         </div>
                     </div>
 
@@ -24,6 +24,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Role</th>
                                 <th>Image</th>
                                 <th>Action</th>
                             </tr>
@@ -35,14 +36,18 @@
                                     <td>{{ $admin->name . ' ' . $admin->last_name }}</td>
                                     <td>{{ $admin->email }}</td>
                                     <td>{{ $admin->phone }}</td>
+                                    <td>
+                                        {{ [4 => 'All', 5 => 'Product System', 6 => 'Order System'][$admin->type] ?? '—' }}
+                                    </td>
+
                                     <td><img src="{{ asset('images/admin/' . $admin->image) }}"
                                             class="rounded-pill shadow p-2" width="100px"></td>
                                     <td>
-                                        {{-- <a href="{{ route('admin.edit', $admin->id) }}" class="btn btn-primary" title="Edit"><i class="fas fa-edit"></i></a> --}}
-                                        @if (Auth::user()->type != 1)
-                                            <a href="#deleteModal{{ $admin->id }}" class="btn btn-danger"
-                                                data-toggle="modal" title="Delete"><i class="fas fa-trash"></i></a>
-                                        @endif
+                                        <a href="{{ route('admin.edit.crm', $admin->id) }}" class="btn btn-primary"
+                                            title="Edit"><i class="fas fa-edit"></i></a>
+
+                                        <a href="#deleteModal{{ $admin->id }}" class="btn btn-danger" data-toggle="modal"
+                                            title="Delete"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                                 <!-- admin Modal -->

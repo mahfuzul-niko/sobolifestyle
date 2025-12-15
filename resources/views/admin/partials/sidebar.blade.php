@@ -38,7 +38,6 @@ $user = user();
                     </a>
                 </li>
                 @if ($user->type == 1)
-
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>
@@ -151,6 +150,12 @@ $user = user();
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('admin.crm') }}" class="nav-link">
+                                    <i class="fas fa-angle-right"></i>
+                                    <p>CRM</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('customer.index') }}" class="nav-link">
                                     <i class="fas fa-angle-right"></i>
                                     <p>Customers</p>
@@ -158,7 +163,9 @@ $user = user();
                             </li>
                         </ul>
                     </li>
-
+                @endif
+                @if (in_array($user->type, [1, 3, 4, 5]))
+                    {{-- product  --}}
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
@@ -220,7 +227,9 @@ $user = user();
 
                         </ul>
                     </li>
-
+                @endif
+                @if (in_array($user->type, [1, 3, 4, 6]))
+                    {{-- order --}}
                     <li class="nav-item">
                         @php
 
@@ -274,7 +283,8 @@ $user = user();
                             @endforeach
                         </ul>
                     </li>
-
+                @endif
+                @if ($user->type == 1)
                     @php(
     $review_count = DB::table('products_reviews')->where(['is_active' => 0])->count('id')
 )

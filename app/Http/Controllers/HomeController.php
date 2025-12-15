@@ -27,21 +27,19 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->type == 1) {
+        if (in_array(Auth::user()->type, [1, 3, 4, 5, 6])) {
             $orders = Order::all();
             $yearly_orders = Order::whereYear('created_at', Carbon::now()->year)->get();
             $monthly_orders = Order::whereYear('created_at', Carbon::now()->year)->whereMonth('created_at', Carbon::now()->month)
                 ->get();
             $daily_orders = Order::whereDate('created_at', Carbon::today())->get();
-            
+
             return view('admin.index', compact('orders', 'yearly_orders', 'monthly_orders', 'daily_orders'));
-            
-        }
-        else if(Auth::user()->type == 2){
+
+        } else if (Auth::user()->type == 2) {
             return redirect()->route('customer.account');
-        }
-        else {
-            session()->flash('error','Access Denied !');
+        } else {
+            session()->flash('error', 'Access Denied !');
             return back();
         }
     }

@@ -17,11 +17,15 @@ class AdminAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        if(optional(Auth::user())->is_active == 1 && (optional(Auth::user())->type == 1 || optional(Auth::user())->type == 3)) {
+        $user = Auth::user();
+        if (
+            $user &&
+            $user->is_active == 1 &&
+            in_array($user->type, [1, 3, 4, 5, 6])
+        ) {
             return $next($request);
         }
-        else {
-            return Redirect()->route('index');
-        }
+
+        return redirect()->route('index');
     }
 }
