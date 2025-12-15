@@ -38,13 +38,4 @@ class Order extends Model
     {
     	return $this->belongsTo(Transactions::class, 'code', 'tran_id');
     }
-
-    
-
-    
-
-    
-
-
-
 }
