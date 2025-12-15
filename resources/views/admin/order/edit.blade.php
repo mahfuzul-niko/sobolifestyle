@@ -92,6 +92,7 @@
                                         <thead>
                                             <tr>
                                                 <th>S.N</th>
+                                                <th>Image</th>
                                                 <th>Product</th>
                                                 <th>Price</th>
                                                 <th>Qty</th>
@@ -100,6 +101,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+
                                             @foreach ($order->order_product as $product)
                                                 @php
                                                     $variation_info = '';
@@ -130,9 +132,15 @@
                                                             $variation_info = $color_info . $attribute_info;
                                                         }
                                                     }
+                                                    $image = App\Models\Product::where('id', $product->id)->value(
+                                                        'thumbnail_image',
+                                                    );
+                                                    // $image will be 'image.jpg' (string)
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $loop->index + 1 }}</td>
+                                                    <td><img src="{{ asset('images/product/' . $image) }}"
+                                                            class="img-fluid" alt="" style="height:80px"></td>
                                                     <td>
                                                         {{ $product->product->title }}
                                                         <br>
