@@ -418,22 +418,12 @@ background-color:#06693B!important;
                         @if (count($category->menu_child) > 0)
                             <li class="offcanvas__menu_li">
                                 <a class="offcanvas__menu_item text-dark"
-                                    href="{{ route('products', ['category_id' => $category->id]) }}">{{ $category->title }}</a>
+                                    href="{{ route('products', ['category_id[]' => $category->id]) }}">{{ $category->title }}</a>
                                 <ul class="offcanvas__sub_menu">
                                     @foreach ($category->menu_child as $p_category)
                                         <li class="offcanvas__sub_menu_li">
-                                            <a href="{{ route('products', ['category_id' => $p_category->id]) }}"
+                                            <a href="{{ route('products', ['category_id[]' => $p_category->id]) }}"
                                                 class="offcanvas__sub_menu_item">{{ $p_category->title }}</a>
-                                            @if (count($p_category->menu_child) > 0)
-                                                <ul class="offcanvas__sub_menu">
-                                                    @foreach ($p_category->menu_child as $inner_sub_category)
-                                                        <li class="offcanvas__sub_menu_li"><a
-                                                                class="offcanvas__sub_menu_item"
-                                                                href="{{ route('products', ['category_id' => $inner_sub_category->id]) }}">{{ $inner_sub_category->title }}</a>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            @endif
                                         </li>
                                     @endforeach
                                 </ul>
@@ -441,7 +431,7 @@ background-color:#06693B!important;
                         @else
                             <li class="offcanvas__menu_li">
                                 <a class="offcanvas__menu_item  text-dark"
-                                    href="{{ route('products', ['category_id' => $category->id]) }}">{{ $category->title }}</a>
+                                    href="{{ route('products', ['category_id[]' => $category->id]) }}">{{ $category->title }}</a>
                             </li>
                         @endif
                     @endforeach
