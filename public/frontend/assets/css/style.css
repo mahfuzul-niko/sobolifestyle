@@ -4542,8 +4542,15 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .hero__slider--items {
-    position: relative
+    position: relative;
+    width: 100%;
+    padding-top: 48.11%;
+    /* exact ratio 1060x510 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
+
 
 .hero__slider--items__inner {
     padding: 6rem 0
@@ -5186,17 +5193,24 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .product__badge--items {
-    width: 3.5rem;           /* same as height for perfect circle */
+    width: 3.5rem;
+    /* same as height for perfect circle */
     height: 3.5rem;
-    line-height: 3.5rem;     /* vertical centering */
-    text-align: center;       /* horizontal centering */
+    line-height: 3.5rem;
+    /* vertical centering */
+    text-align: center;
+    /* horizontal centering */
     font-weight: 500;
-    font-size: 1rem;          /* smaller font to fit inside circle */
-    background: red;          /* red background */
+    font-size: 1rem;
+    /* smaller font to fit inside circle */
+    background: red;
+    /* red background */
     color: white;
-    border-radius: 50%;       /* makes it a perfect circle */
+    border-radius: 50%;
+    /* makes it a perfect circle */
     display: inline-block;
-    padding: 0;               /* remove padding to maintain circle shape */
+    padding: 0;
+    /* remove padding to maintain circle shape */
 }
 
 
