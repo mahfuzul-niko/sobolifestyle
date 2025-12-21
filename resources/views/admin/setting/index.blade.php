@@ -346,6 +346,19 @@
                                             @enderror
                                         </div>
                                     </div>
+                                     <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Tiktok</label>
+                                            <input type="text" name="tiktok"
+                                                value="{{ optional($setting)->tiktok }}"
+                                                class="form-control @error('tiktok') is-invalid @enderror">
+                                            @error('tiktok')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Messenger</label>

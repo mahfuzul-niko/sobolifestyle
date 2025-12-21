@@ -52,6 +52,18 @@
                             </a>
                         </li>
                         <li class="social__shear--list">
+                                <a class="social__shear--list__icon" target="_blank"
+                                    href="{{ optional($business)->tiktok }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M12.75 2h3.03c.16 1.28.75 2.47 1.7 3.41a6.18 6.18 0 0 0 3.52 1.74v3.07a9.24 9.24 0 0 1-5.22-1.7v6.95a6.25 6.25 0 1 1-6.25-6.25c.36 0 .71.03 1.06.1v3.18a3.12 3.12 0 1 0 2.16 2.97V2z"
+                                            fill="currentColor" />
+                                    </svg>
+                                    <span class="visually-hidden">TikTok</span>
+                                </a>
+                            </li>
+                        <li class="social__shear--list">
                             <a class="social__shear--list__icon" target="_blank"
                                 href="{{ optional($business)->twitter }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16.489" height="13.384"

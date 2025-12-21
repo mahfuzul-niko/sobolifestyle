@@ -230,6 +230,7 @@ class SettingController extends Controller
 
         $setting->phone = $request->phone;
         $setting->whatsapp = $request->whatsapp;
+        $setting->tiktok = $request->tiktok;
         $setting->email = $request->email;
         $setting->address = $request->address;
         $setting->head = $request->head;
