@@ -119,7 +119,7 @@
                                                             <input type="hidden" name="pid[]" value="{{$product->product_id}}">
                                                             <input type="hidden" name="" id="check_id{{$product->product_id}}" value="{{$product->product_id}}">
                                                             
-                                                            <h5 class="fw-bold mb-0">{{$product->product_info->title}}</h5>
+                                                            <h5 class="fw-bold mb-0">{{$product->product_info->title ?? ''}}</h5>
                                                         </td>
                                                         <td>
                                                             <select name="discount_type[]" class="form-control" id="">
