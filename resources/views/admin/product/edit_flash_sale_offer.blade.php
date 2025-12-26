@@ -121,6 +121,8 @@
                                                             
                                                             <h5 class="fw-bold mb-0">{{$product->product_info->title ?? ''}}</h5>
                                                         </td>
+                                                        @if ($product->product_info->discount_type)
+                                                            
                                                         <td>
                                                             <select name="discount_type[]" class="form-control" id="">
                                                                 <option @if($product->product_info->discount_type == 'no') class="text-light bg-success" selected @endif  value="no">NO</option>
@@ -128,6 +130,7 @@
                                                                 <option @if($product->product_info->discount_type == 'percentage') class="text-light bg-success" selected @endif undefined="" value="percentage">Percentage</option>
                                                             </select>
                                                         </td>
+                                                        @endif
                                                         <td>
                                                             <input type="number" value="{{optional($product->product_info)->discount_amount}}" required="" name="discount_amount[]" class="form-control" placeholder="Discount Amount" step="any">
                                                         </td>
