@@ -111,35 +111,57 @@
                                                         <th style="padding: 10px 7px; text-align: center;">X</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="demo" class="demo">
-                                                    @if(count($offer->products) > 0)
-                                                    @foreach($offer->products as $product)
-                                                    <tr id="cart_tr{{$product->product_id}}">
-                                                        <td>
-                                                            <input type="hidden" name="pid[]" value="{{$product->product_id}}">
-                                                            <input type="hidden" name="" id="check_id{{$product->product_id}}" value="{{$product->product_id}}">
-                                                            
-                                                            <h5 class="fw-bold mb-0">{{$product->product_info->title ?? ''}}</h5>
-                                                        </td>
-                                                        @if ($product->product_info->discount_type)
-                                                            
-                                                        <td>
-                                                            <select name="discount_type[]" class="form-control" id="">
-                                                                <option @if($product->product_info->discount_type == 'no') class="text-light bg-success" selected @endif  value="no">NO</option>
-                                                                <option @if($product->product_info->discount_type == 'flat') class="text-light bg-success" selected @endif undefined="" value="flat">Flat</option>
-                                                                <option @if($product->product_info->discount_type == 'percentage') class="text-light bg-success" selected @endif undefined="" value="percentage">Percentage</option>
-                                                            </select>
-                                                        </td>
-                                                        @endif
-                                                        <td>
-                                                            <input type="number" value="{{optional($product->product_info)->discount_amount}}" required="" name="discount_amount[]" class="form-control" placeholder="Discount Amount" step="any">
-                                                        </td>
-                                                        <td class="text-center"><button type="button" onclick="remove_cart_tr({{$product->product_id}})" class="btn btn-danger btn-sm">X</button></td>
-                                                    </tr>
-                                                    @endforeach
-                                                    @endif
+                                               <tbody id="demo" class="demo">
+    @if(count($offer->products) > 0)
+        @foreach($offer->products as $product)
+            <tr id="cart_tr{{ $product->product_id }}">
+                <td>
+                    <input type="hidden" name="pid[]" value="{{ $product->product_id }}">
+                    <input type="hidden" id="check_id{{ $product->product_id }}" value="{{ $product->product_id }}">
 
-                                                </tbody>
+                    <h5 class="fw-bold mb-0">
+                        {{ optional($product->product_info)->title }}
+                    </h5>
+                </td>
+
+                @if(optional($product->product_info)->discount_type)
+                    <td>
+                        <select name="discount_type[]" class="form-control">
+                            <option value="no"
+                                @if(optional($product->product_info)->discount_type == 'no') selected @endif>
+                                NO
+                            </option>
+
+                            <option value="flat"
+                                @if(optional($product->product_info)->discount_type == 'flat') selected @endif>
+                                Flat
+                            </option>
+
+                            <option value="percentage"
+                                @if(optional($product->product_info)->discount_type == 'percentage') selected @endif>
+                                Percentage
+                            </option>
+                        </select>
+                    </td>
+                @endif
+
+                <td>
+                    <input type="number"
+                           value="{{ optional($product->product_info)->discount_amount }}"
+                           name="discount_amount[]" class="form-control"
+                           placeholder="Discount Amount" step="any" required>
+                </td>
+
+                <td class="text-center">
+                    <button type="button"
+                            onclick="remove_cart_tr({{ $product->product_id }})"
+                            class="btn btn-danger btn-sm">X</button>
+                </td>
+            </tr>
+        @endforeach
+    @endif
+</tbody>
+
                                             </table>
                                         </div>
                                         <div class="p-2">
