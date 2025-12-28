@@ -662,9 +662,9 @@
                             <div id="description" class="tab_pane">
                                 <div class="product__tab--content">
                                     <div class="content-area">
-                                       {!! optional($product)->description !!}
+                                        {!! optional($product)->description !!}
                                     </div>
-                                    
+
                                 </div>
                             </div>
 
@@ -747,11 +747,12 @@
     <script>
         let baseUrl = $('#baseURL').val();
 
-
         function select_variation(product_id) {
+
             $('#selected_variation_id' + product_id).val('');
             $('#stock_qty_' + product_id).html(0);
             $('#stock_qty_show' + product_id).html('');
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -760,14 +761,19 @@
 
             $.ajax({
                 url: "{{ route('single.product.variation.check') }}",
-                method: 'post',
+                type: "POST",
                 data: $('#variation_form' + product_id).serialize(),
+
                 success: function(response) {
-                    console.log('response:', response);
+
+                    // Case 1: Full match found
                     if (response.variation_status == 1) {
+
                         if (response.image != null) {
-                            $('#variationImage').html('<img class="shadow border rounded" src="' + baseUrl +
-                                '/images/product/' + response.image + '" width="250px">');
+                            $('#variationImage').html(
+                                '<img class="shadow border rounded" src="' + baseUrl + '/images/product/' +
+                                response.image + '" width="250">'
+                            );
                         } else {
                             $('#variationImage').html('');
                         }
@@ -775,7 +781,7 @@
                         $('#product_price_info' + product_id).html(response.price_info);
 
                         if (response.qty > 0) {
-                            $('#stock_qty_show' + product_id).html('In Stock');
+                            $('#stock_qty_show' + product_id).html("In Stock");
                         }
 
                         $('#selected_variation_id' + product_id).val(response.id);
@@ -788,31 +794,59 @@
                         } else {
                             $('#add_to_cart_button' + product_id).hide();
                             $('#buy_now_button' + product_id).hide();
-                            $('#notification_show' + product_id).text('Out of Stock');
-                            $('#notification_show' + product_id).show();
+                            $('#notification_show' + product_id).text("Out of Stock").show();
                         }
-                    } else {
-                        if (response.color_dependent_variation_status == 1) {
-                            $('#single_variation_info_div' + product_id).html(response
-                                .color_dependent_variation);
+
+                    }
+
+                    // Case 2: Color changed → must update variation list
+                    if (response.color_dependent_variation_status == 1) {
+
+                        // Replace FULL variation list with only the ones for selected color
+                        $('#single_variation_info_div' + product_id)
+                            .html(response.color_dependent_variation);
+
+                        // Auto select the first variation
+                        let firstAttribute = $('#single_variation_info_div' + product_id)
+                            .find('input[type=radio]')
+                            .first();
+
+                        if (firstAttribute.length > 0) {
+                            firstAttribute.prop('checked', true);
+                            select_variation(product_id); // recursively load its data
                         }
                     }
                 }
             });
         }
 
-        // Automatically show the first variation by default
+
+        // AUTO-SELECT default color + default attribute on load
         $(document).ready(function() {
+
             $('.product__variant').each(function() {
-                let product_id = $(this).closest('form').attr('id').replace('variation_form', '');
-                let firstInput = $(this).find('input[type=radio]').first();
-                if (firstInput.length > 0) {
-                    firstInput.prop('checked', true); // select first variation
-                    select_variation(product_id); // load its data
+
+                let form = $(this).closest('form');
+                let product_id = form.attr('id').replace('variation_form', '');
+
+                // 1. Select first color
+                let firstColor = form.find('input[name=color]').first();
+                if (firstColor.length > 0) {
+                    firstColor.prop('checked', true);
                 }
+
+                // 2. Select first attribute (for default color)
+                let firstAttribute = form.find('input[name=attribute_variation]').first();
+                if (firstAttribute.length > 0) {
+                    firstAttribute.prop('checked', true);
+                }
+
+                // 3. Trigger loading
+                select_variation(product_id);
             });
         });
     </script>
+
 
 
 @endsection
