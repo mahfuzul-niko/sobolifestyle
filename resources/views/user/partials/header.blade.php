@@ -75,6 +75,14 @@
                 fill-opacity: 0;
             }
         }
+        @media (max-width: 768px) {
+    .logo-anim-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
     </style>
     <div class="main__header header__sticky" style="
     background-color: <?php echo $business->header_bg_color ?? 'black'; ?> !important;
@@ -101,7 +109,7 @@
                     </div> --}}
                     <a href="{{ route('index') }}" class="logo-anim-wrapper">
 
-                        <svg viewBox="1200 70 1500 560" xmlns="http://www.w3.org/2000/svg">
+                        <svg viewBox="1200 30 1500 560" xmlns="http://www.w3.org/2000/svg" style="padding-right: -20px;margin-right: -60px;">
 
 
                             <path class="cls-2"

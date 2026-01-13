@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SslCommerzPaymentController;
@@ -12,7 +13,6 @@ use App\Services\BdCourierFraudService;
 Route::get('/invoice', function () {
 	return view('admin.invoice.generate');
 });
-
 
 Route::get('/fraud/chack', function (Request $request) {
 
@@ -476,5 +476,94 @@ Route::group(['prefix' => '/home', 'middleware' => ['auth', 'verified', 'adminAu
 
 
 
+});
+Route::get('/product-catalogue.xml', function () {
 
+    // Helper to make strings XML-safe
+    if (!function_exists('xmlSafe')) {
+        function xmlSafe($value)
+        {
+            return htmlspecialchars(
+                (string) ($value ?? ''),
+                ENT_XML1 | ENT_QUOTES,
+                'UTF-8'
+            );
+        }
+    }
+
+    $products = Product::with(['single_stock', 'brand'])
+        ->where('is_active', 1)
+        ->get();
+
+    $ns = 'http://base.google.com/ns/1.0';
+
+    $xml = new SimpleXMLElement(
+        '<?xml version="1.0" encoding="UTF-8"?>
+        <rss version="2.0" xmlns:g="' . $ns . '">
+            <channel></channel>
+        </rss>'
+    );
+
+    $channel = $xml->channel;
+    $channel->addChild('title', 'Facebook Product Feed');
+    $channel->addChild('link', config('app.url'));
+    $channel->addChild('description', 'Minimal Facebook catalog feed');
+
+    foreach ($products as $product) {
+
+        // Facebook minimum requirements
+        if (
+            !$product->single_stock ||
+            !$product->single_stock->price ||
+            !$product->thumbnail_image
+        ) {
+            continue;
+        }
+
+        $item = $channel->addChild('item');
+
+        $item->addChild('g:id', $product->id, $ns);
+        $item->addChild('g:title', xmlSafe($product->title), $ns);
+
+        $item->addChild(
+            'g:description',
+            xmlSafe(strip_tags($product->description ?: $product->title)),
+            $ns
+        );
+
+        $item->addChild(
+            'g:link',
+            url('/product/' . $product->id),
+            $ns
+        );
+
+        $item->addChild(
+            'g:image_link',
+            asset($product->thumbnail_image),
+            $ns
+        );
+
+        $item->addChild(
+            'g:availability',
+            ($product->single_stock->qty ?? 0) > 0 ? 'in stock' : 'out of stock',
+            $ns
+        );
+
+        $item->addChild(
+            'g:price',
+            number_format($product->single_stock->price, 2) . ' BDT',
+            $ns
+        );
+
+        $item->addChild(
+            'g:brand',
+            xmlSafe(optional($product->brand)->name ?? 'Sobolifestyle'),
+            $ns
+        );
+
+        $item->addChild('g:condition', 'new', $ns);
+    }
+
+    return response($xml->asXML(), 200)
+        ->header('Content-Type', 'application/rss+xml; charset=UTF-8');
 });
