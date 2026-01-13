@@ -491,12 +491,14 @@ Route::get('/product-catalogue.xml', function () {
         }
     }
 
-    $products = Product::with(['single_stock', 'brand'])
+    // Fetch all active products with their variants and brand
+    $products = Product::with(['variation_stock', 'brand'])
         ->where('is_active', 1)
         ->get();
 
     $ns = 'http://base.google.com/ns/1.0';
 
+    // Create XML skeleton
     $xml = new SimpleXMLElement(
         '<?xml version="1.0" encoding="UTF-8"?>
         <rss version="2.0" xmlns:g="' . $ns . '">
@@ -507,63 +509,61 @@ Route::get('/product-catalogue.xml', function () {
     $channel = $xml->channel;
     $channel->addChild('title', 'Facebook Product Feed');
     $channel->addChild('link', config('app.url'));
-    $channel->addChild('description', 'Minimal Facebook catalog feed');
+    $channel->addChild('description', 'Facebook catalog feed with variants');
 
     foreach ($products as $product) {
 
-        // Facebook minimum requirements
-        if (
-            !$product->single_stock ||
-            !$product->single_stock->price ||
-            !$product->thumbnail_image
-        ) {
-            continue;
+        foreach ($product->variation_stock as $stock) {
+            // Skip inactive or empty stock
+            if (!$stock->price || $stock->is_active == 0) continue;
+
+            $item = $channel->addChild('item');
+
+            // Unique ID per variant
+            $item->addChild('g:id', $product->id . '-' . $stock->id, $ns);
+
+            // Title and description
+            $item->addChild('g:title', xmlSafe($product->title), $ns);
+            $item->addChild(
+                'g:description',
+                xmlSafe(strip_tags($product->description ?: $product->title)),
+                $ns
+            );
+
+            // Product link
+            $item->addChild('g:link', url('/product/' . $product->id), $ns);
+
+            // Image: stock image if exists, otherwise product thumbnail
+            $image = $stock->image ?: $product->thumbnail_image;
+            $item->addChild('g:image_link', asset($image), $ns);
+
+            // Stock availability
+            $item->addChild(
+                'g:availability',
+                ($stock->qty ?? 0) > 0 ? 'in stock' : 'out of stock',
+                $ns
+            );
+
+            // Price
+            $item->addChild(
+                'g:price',
+                number_format($stock->price, 2) . ' BDT',
+                $ns
+            );
+
+            // Brand
+            $item->addChild(
+                'g:brand',
+                xmlSafe(optional($product->brand)->name ?? 'Sobolifestyle'),
+                $ns
+            );
+
+            // Condition
+            $item->addChild('g:condition', 'new', $ns);
         }
-
-        $item = $channel->addChild('item');
-
-        $item->addChild('g:id', $product->id, $ns);
-        $item->addChild('g:title', xmlSafe($product->title), $ns);
-
-        $item->addChild(
-            'g:description',
-            xmlSafe(strip_tags($product->description ?: $product->title)),
-            $ns
-        );
-
-        $item->addChild(
-            'g:link',
-            url('/product/' . $product->id),
-            $ns
-        );
-
-        $item->addChild(
-            'g:image_link',
-            asset($product->thumbnail_image),
-            $ns
-        );
-
-        $item->addChild(
-            'g:availability',
-            ($product->single_stock->qty ?? 0) > 0 ? 'in stock' : 'out of stock',
-            $ns
-        );
-
-        $item->addChild(
-            'g:price',
-            number_format($product->single_stock->price, 2) . ' BDT',
-            $ns
-        );
-
-        $item->addChild(
-            'g:brand',
-            xmlSafe(optional($product->brand)->name ?? 'Sobolifestyle'),
-            $ns
-        );
-
-        $item->addChild('g:condition', 'new', $ns);
     }
 
+    // Return XML response
     return response($xml->asXML(), 200)
         ->header('Content-Type', 'application/rss+xml; charset=UTF-8');
 });
